@@ -1,0 +1,24 @@
+BINH CHANH
+BINH TAN
+BINH THANH
+CAN GIO
+CU CHI
+GO VAP
+HCM
+HOC MON
+NHA BE
+PHU NHUAN
+QUAN 1
+QUAN 3
+QUAN 4
+QUAN 5
+QUAN 6
+QUAN 7
+QUAN 8
+QUAN 10
+QUAN 11
+QUAN 12
+TAN BINH
+TAN PHU
+THU DUC
+{'date': '10.11', 'data': {'BINH CHANH': {'I': {'New': 175, 'Total': 25476}, 'R': {'New': 126, 'Total': None}, 'D': {'New': 5, 'Total': None}}, 'BINH TAN': {'I': {'New': 465, 'Total': 42055}, 'R': {'New': 206, 'Total': None}, 'D': {'New': 8, 'Total': None}}, 'BINH THANH': {'I': {'New': 116, 'Total': 24784}, 'R': {'New': 119, 'Total': None}, 'D': {'New': 5, 'Total': None}}, 'CAN GIO': {'I': {'New': 11, 'Total': 1615}, 'R': {'New': 8, 'Total': None}, 'D': {'New': 0, 'Total': None}}, 'CU CHI': {'I': {'New': 25, 'Total': 8674}, 'R': {'New': 41, 'Total': None}, 'D': {'New': 2, 'Total': None}}, 'GO VAP': {'I': {'New': 33, 'Total': 11167}, 'R': {'New': 55, 'Total': None}, 'D': {'New': 2, 'Total': None}}, 'HCM': {'I': {'New': 1499, 'Total': 401493}, 'R': {'New': 1925, 'Total': 232923}, 'D': {'New': 73, 'Total': 15832}}, 'HOC MON': {'I': {'New': 30, 'Total': 21348}, 'R': {'New': 103, 'Total': None}, 'D': {'New': 4, 'Total': None}}, 'NHA BE': {'I': {'New': 92, 'Total': 17067}, 'R': {'New': 82, 'Total': None}, 'D': {'New': 3, 'Total': None}}, 'PHU NHUAN': {'I': {'New': 17, 'Total': 7643}, 'R': {'New': 36, 'Total': None}, 'D': {'New': 1, 'Total': None}}, 'QUAN 1': {'I': {'New': 18, 'Total': 15190}, 'R': {'New': 44, 'Total': None}, 'D': {'New': 2, 'Total': None}}, 'QUAN 4': {'I': {'New': 13, 'Total': 18378}, 'R': {'New': 86, 'Total': None}, 'D': {'New': 3, 'Total': None}}, 'QUAN 5': {'I': {'New': 24, 'Total': 13059}, 'R': {'New': 62, 'Total': None}, 'D': {'New': 2, 'Total': None}}, 'QUAN 6': {'I': {'New': 15, 'Total': 17126}, 'R': {'New': 81, 'Total': None}, 'D': {'New': 3, 'Total': None}}, 'QUAN 7': {'I': {'New': 13, 'Total': 15024}, 'R': {'New': 71, 'Total': None}, 'D': {'New': 3, 'Total': None}}, 'QUAN 8': {'I': {'New': 27, 'Total': 21781}, 'R': {'New': 103, 'Total': None}, 'D': {'New': 4, 'Total': None}}, 'QUAN 10': {'I': {'New': 18, 'Total': 20142}, 'R': {'New': 95, 'Total': None}, 'D': {'New': 4, 'Total': None}}, 'QUAN 11': {'I': {'New': 18, 'Total': 9379}, 'R': {'New': 44, 'Total': None}, 'D': {'New': 2, 'Total': None}}, 'QUAN 12': {'I': {'New': 115, 'Total': 25954}, 'R': {'New': 127, 'Total': None}, 'D': {'New': 5, 'Total': None}}, 'TAN BINH': {'I': {'New': 25, 'Total': 22361}, 'R': {'New': 105, 'Total': None}, 'D': {'New': 4, 'Total': None}}, 'TAN PHU': {'I': {'New': 190, 'Total': 22385}, 'R': {'New': 108, 'Total': None}, 'D': {'New': 4, 'Total': None}}, 'THU DUC': {'I': {'New': 19, 'Total': 29326}, 'R': {'New': 139, 'Total': None}, 'D': {'New': 5, 'Total': None}}}}
