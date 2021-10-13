@@ -36,16 +36,12 @@ def home(district="hcm"):
     district = district.replace('-',' ')
     
     data = get_latest_data(district)
-    backup_dir = os.environ.get("BACKUP_DIR", "./backup")
-    backup_path = os.path.join(backup_dir,'backupdata.json')
-    if data is None:
-        with open(backup_path) as json_file:
-            data = json.load(json_file)
-    else:
-        with open(backup_path, 'w') as json_file:
-            json.dump(data, json_file)
-
-    summary = get_daily_latest_statistics()
+    backup_data_path = os.environ.get("BACKUP_DATA_PATH", "./backup/backup_data.json")
+    backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
+    with open(backup_data_path) as json_file:
+        data = json.load(json_file)
+    with open(backup_summary_path) as json_file:
+        summary = get_daily_latest_statistics()
 
     # with open('sample.json') as f:
     #     summary = json.load(f)
