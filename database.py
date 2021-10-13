@@ -12,23 +12,20 @@ def query_data(db, district, date):
     return db[district].find_one({"_id": date})
 
 def get_latest_data(district='HCM', skip_missing = False):
-    try:
-        client = MongoClient("mongodb+srv://thesisbecaked:thesisbecaked@thesis.cojlj.mongodb.net")
-        db = client['daily-data']
-        latest_date = db.auxiliary.find_one({"type": "latest_date"}, {"latest_date": 1})['latest_date']
-        if skip_missing:
-            return query_data(db, district, latest_date)
-        is_exist = db[district].find_one({"_id": latest_date}, {"_id": 1})
-        if is_exist is not None:
-            return query_data(db, district, latest_date)
-        last_date = list(db[district].find({}, {"_id": 1}).sort("_id", -1))[0]['_id']
-        
-        data = query_data(db, district, last_date)
-        client.close()
-        return data
-    except:
-        return None
-
+    client = MongoClient("mongodb+srv://thesisbecaked:thesisbecaked@thesis.cojlj.mongodb.net")
+    db = client['daily-data']
+    latest_date = db.auxiliary.find_one({"type": "latest_date"}, {"latest_date": 1})['latest_date']
+    if skip_missing:
+        return query_data(db, district, latest_date)
+    is_exist = db[district].find_one({"_id": latest_date}, {"_id": 1})
+    if is_exist is not None:
+        return query_data(db, district, latest_date)
+    last_date = list(db[district].find({}, {"_id": 1}).sort("_id", -1))[0]['_id']
+    
+    data = query_data(db, district, last_date)
+    client.close()
+    return data
+    
 def get_daily_latest_statistics():
     client = MongoClient("mongodb+srv://thesisbecaked:thesisbecaked@thesis.cojlj.mongodb.net")
     db = client['daily-data']
@@ -75,13 +72,17 @@ def get_daily_latest_statistics():
 #test
 if __name__ == '__main__':
     try:
-        data = get_latest_data()
         summary = get_daily_latest_statistics()
 
-        backup_data_path = os.environ.get("BACKUP_DATA_PATH", "./backup/backup_data.json")
+        backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
         backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
-        with open(backup_data_path,'w') as json_file:
-            json.dump(data,json_file)
+        
+        districts = ['BINH CHANH', 'BINH TAN', 'BINH THANH', 'CAN GIO', 'CU CHI', 'GO VAP', 'HCM', 'HOC MON', 'NHA BE', 'PHU NHUAN'] + [f'QUAN {i}' for i in [1, 3, 4, 5, 6, 7, 8, 10, 11, 12]] + ['TAN BINH', 'TAN PHU', 'THU DUC']
+        for district in districts:
+            data = get_latest_data(district)
+            path = os.path.join(backup_data_dir,district+'.json')
+            with open(path,'w') as json_file:
+                json.dump(data,json_file)
         with open(backup_summary_path,'w') as json_file:
             json.dump(summary,json_file)
     except:
