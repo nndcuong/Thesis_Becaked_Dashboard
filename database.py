@@ -72,14 +72,17 @@ def get_daily_latest_statistics():
     client.close()
     return rv
 
-#testBACKUP_DATA_PATH="./backup"
+#test
 if __name__ == '__main__':
-    data = get_latest_data()
-    summary = get_daily_latest_statistics()
+    try:
+        data = get_latest_data()
+        summary = get_daily_latest_statistics()
 
-    backup_data_path = os.environ.get("BACKUP_DATA_PATH", "./backup/backup_data.json")
-    backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
-    with open(backup_data_path,'w') as json_file:
-        json.dump(data,json_file)
-    with open(backup_summary_path,'w') as json_file:
-        json.dump(summary,json_file)
+        backup_data_path = os.environ.get("BACKUP_DATA_PATH", "./backup/backup_data.json")
+        backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
+        with open(backup_data_path,'w') as json_file:
+            json.dump(data,json_file)
+        with open(backup_summary_path,'w') as json_file:
+            json.dump(summary,json_file)
+    except:
+        pass

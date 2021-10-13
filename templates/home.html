@@ -90,7 +90,7 @@
       </thead>
       <tbody>
         {% for district in districts %}
-        {% if district == name %}
+        {% if district == name != 'HCM' %}
         <tr style="color: #1abc9c; font-style: italic;">
           <td scope="row" style="text-align:center">{{ loop.index }}</td>
           <td style="text-align:center">{{ district }}</td>
