@@ -3,8 +3,9 @@ import glob
 import os
 import pandas as pd
 import shutil
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta
 import sys
+import json
 
 def remove_v2_path(folder_name = 'data'):
     all_csv_paths = glob.glob(f'{folder_name}/*/v2/*/*/*.csv')
@@ -20,7 +21,7 @@ def prepare_all_data(folder_name = 'data'):
     districts = ['BINH CHANH', 'BINH TAN', 'BINH THANH', 'CAN GIO', 'CU CHI', 'GO VAP', 'HCM', 'HOC MON', 'NHA BE', 'PHU NHUAN'] + [f'QUAN {i}' for i in [1, 3, 4, 5, 6, 7, 8, 10, 11, 12]] + ['TAN BINH', 'TAN PHU', 'THU DUC']
     data = {}
     for district in districts:
-        paths = list(filter(lambda x: district in x, all_csv_paths))
+        paths = list(filter(lambda x: any(district == tmp for tmp in x.split(os.path.sep)), all_csv_paths))
         data[district] = {}
         for path in paths:
             coms = path.split(os.path.sep)
@@ -72,6 +73,7 @@ def refactor_date(folder):
             for case in ['NormalCase', 'BestCase', 'WorstCase']:
                 path = f'{folder}/{date}/{district}/{case}/'
                 sd_i, sd_r, sd_d = None, None, None
+                df_I, df_R, df_D = None, None, None
                 try:
                     df_I = pd.read_csv(path + 'daily_infectious.csv')
                     sd_i = dt.strptime(df_I['Date'].values[0] + '/21', '%d/%m/%y')
@@ -116,7 +118,7 @@ def refactor_date(folder):
                         df_R.to_csv(path + 'total_recovered.csv', index = False)
                 elif sd_d is not None and sd_i is not None:
                     if sd_d == sd_i: continue
-                    m_date = max(sd_i, sd_r)
+                    m_date = max(sd_i, sd_d)
                     if sd_i < m_date:
                         df_I = df_I.loc[(m_date - sd_i).days:]
                         df_I.to_csv(path + 'daily_infectious.csv', index = False)
@@ -142,8 +144,15 @@ def insert_new_data(db, folder_name):
         db[name].insert_many(value)
 def update_lastest_date(db, date):
     db['auxiliary'].replace_one({"type": "latest_date"}, {"type": "latest_date", "latest_date": date})
+    # db['auxiliary'].insert_one({"type": "latest_date", "latest_date": date})
 
-def update_cummulative_info(db):
+def update_cummulative_info(db, folder_name, insert_all = False):
+    if not insert_all:
+        tmp = folder_name.split('.')
+        month, date = int(tmp[0]), int(tmp[1])
+        pre_date = dt.strptime(f'{date}/{month}/21', '%d/%m/%y') - timedelta(days = 1)
+        curr_date = f'{pre_date.month}.{pre_date.day}'
+
     df = pd.read_excel('SEIRD_data_12_7_2021.xlsx', sheet_name = None)
     df_I = df['Infectious']
     districts = list(df_I.columns)[1:]
@@ -157,21 +166,37 @@ def update_cummulative_info(db):
     df_R = df_R.cumsum()
     df_D = df_D.cumsum()
     data = []
-    date = dates[-1]
-    i = len(dates) - 1
-    row = {"_id": date}
-    row['I'] = {}
-    row['R'] = {}
-    row['D'] = {}
-    row['V'] = {}
-    row['C'] = {}
-    for district in districts:
-        row['I'][district] = int(df_I.iloc[i][district])
-        row['R'][district] = int(df_R.iloc[i][district])
-        row['D'][district] = int(df_D.iloc[i][district])
-        row['V'][district] = int(df_V.iloc[i][district])
-    row['C']['HCM'] = int(df_C.loc[i, 'HCM'])
-    data.append(row)
+    if not insert_all:
+        for i, date in enumerate(dates):
+            if date == curr_date: break
+            row = {"_id": date}
+            row['I'] = {}
+            row['R'] = {}
+            row['D'] = {}
+            row['V'] = {}
+            row['C'] = {}
+            for district in districts:
+                row['I'][district] = int(df_I.iloc[i][district])
+                row['R'][district] = int(df_R.iloc[i][district])
+                row['D'][district] = int(df_D.iloc[i][district])
+                row['V'][district] = int(df_V.iloc[i][district])
+            row['C']['HCM'] = int(df_C.loc[i, 'HCM'])
+            data.append(row)
+    else:
+        for i, date in enumerate(dates):
+            row = {"_id": date}
+            row['I'] = {}
+            row['R'] = {}
+            row['D'] = {}
+            row['V'] = {}
+            row['C'] = {}
+            for district in districts:
+                row['I'][district] = int(df_I.iloc[i][district])
+                row['R'][district] = int(df_R.iloc[i][district])
+                row['D'][district] = int(df_D.iloc[i][district])
+                row['V'][district] = int(df_V.iloc[i][district])
+            row['C']['HCM'] = int(df_C.loc[i, 'HCM'])
+            data.append(row)
     db['cum_data'].insert_many(data)
 
 
@@ -182,7 +207,8 @@ if __name__ == '__main__':
         folder_name = sys.argv[1]
         remove_v2_path(folder_name)
 
-    uri = "mongodb+srv://thesis.cojlj.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
+
+    uri = json.load(open('config.json'))['mongodb_write_uri']
     client = MongoClient(uri,
                      tls=True,
                      tlsCertificateKeyFile='certificates.pem')
@@ -193,7 +219,7 @@ if __name__ == '__main__':
         refactor_date(folder_name)
         update_lastest_date(db, folder_name)
         insert_new_data(db, folder_name)
-    update_cummulative_info(db)
+    update_cummulative_info(db, folder_name)
     # print(get_latest_data(db, "QUAN 3"))
     client.close()
     
