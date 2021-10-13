@@ -5,6 +5,7 @@ import pandas as pd
 import shutil
 import sys
 from datetime import datetime as dt, timedelta
+import json
 
 def remove_v2_path(folder_name = 'data'):
     all_csv_paths = glob.glob(f'{folder_name}/*/v2/*/*/*.csv')
@@ -118,9 +119,12 @@ def get_daily_latest_statistics():
             I = result['I']['real'][-1]
         except:
             I = None
-        acc_I = data['I'].get(district, None)
-        acc_R = data['R'].get(district, None)
-        acc_D = data['D'].get(district, None)
+        try:
+            acc_I = data['I'].get(district, None)
+            acc_R = data['R'].get(district, None)
+            acc_D = data['D'].get(district, None)
+        except:
+            acc_I = acc_R = acc_D = 0
         rv['data'][district] = {
             'I': {'New': I, 'Total': acc_I},
             'R': {'New': R, 'Total': acc_R},
@@ -129,17 +133,14 @@ def get_daily_latest_statistics():
     client.close()
     return rv
 
-#test
+#testBACKUP_DATA_PATH="./backup"
 if __name__ == '__main__':
-    # if len(sys.argv) > 1:
-    #     folder_name = sys.argv[1]
-    #     remove_v2_path(folder_name)
+    data = get_latest_data()
+    summary = get_daily_latest_statistics()
 
-    # client = MongoClient("mongodb+srv://thesisbecaked:thesisbecaked@thesis.cojlj.mongodb.net")
-    # # client = MongoClient('mongodb://localhost:27017/')
-    # db = client['daily-data']
-    # if len(sys.argv) > 1:
-    #     insert_new_data(db, folder_name)
-    # print(query_data(db, "HCM", "10.12"))
-    # client.close()
-    print(get_latest_data('QUAN 3'))
+    backup_data_path = os.environ.get("BACKUP_DATA_PATH", "./backup/backup_data.json")
+    backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
+    with open(backup_data_path,'w') as json_file:
+        json.dump(data,json_file)
+    with open(backup_summary_path,'w') as json_file:
+        json.dump(summary,json_file)
