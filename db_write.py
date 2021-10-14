@@ -5,7 +5,6 @@ import pandas as pd
 import shutil
 from datetime import datetime as dt, timedelta
 import sys
-import json
 
 def remove_v2_path(folder_name = 'data'):
     all_csv_paths = glob.glob(f'{folder_name}/*/v2/*/*/*.csv')
@@ -142,9 +141,11 @@ def insert_new_data(db, folder_name):
             print(f'MISSED {name}')
             continue
         db[name].insert_many(value)
-def update_lastest_date(db, date):
-    db['auxiliary'].replace_one({"type": "latest_date"}, {"type": "latest_date", "latest_date": date})
-    # db['auxiliary'].insert_one({"type": "latest_date", "latest_date": date})
+def update_lastest_date(db, date, insert = False):
+    if not insert:
+        db['auxiliary'].replace_one({"type": "latest_date"}, {"type": "latest_date", "latest_date": date})
+    else:
+        db['auxiliary'].insert_one({"type": "latest_date", "latest_date": date})
 
 def update_cummulative_info(db, folder_name, insert_all = False):
     if not insert_all:
@@ -169,19 +170,19 @@ def update_cummulative_info(db, folder_name, insert_all = False):
     if not insert_all:
         for i, date in enumerate(dates):
             if date == curr_date: break
-            row = {"_id": date}
-            row['I'] = {}
-            row['R'] = {}
-            row['D'] = {}
-            row['V'] = {}
-            row['C'] = {}
-            for district in districts:
-                row['I'][district] = int(df_I.iloc[i][district])
-                row['R'][district] = int(df_R.iloc[i][district])
-                row['D'][district] = int(df_D.iloc[i][district])
-                row['V'][district] = int(df_V.iloc[i][district])
-            row['C']['HCM'] = int(df_C.loc[i, 'HCM'])
-            data.append(row)
+        row = {"_id": date}
+        row['I'] = {}
+        row['R'] = {}
+        row['D'] = {}
+        row['V'] = {}
+        row['C'] = {}
+        for district in districts:
+            row['I'][district] = int(df_I.iloc[i][district])
+            row['R'][district] = int(df_R.iloc[i][district])
+            row['D'][district] = int(df_D.iloc[i][district])
+            row['V'][district] = int(df_V.iloc[i][district])
+        row['C']['HCM'] = int(df_C.loc[i, 'HCM'])
+        data.append(row)
     else:
         for i, date in enumerate(dates):
             row = {"_id": date}
@@ -208,7 +209,7 @@ if __name__ == '__main__':
         remove_v2_path(folder_name)
 
 
-    uri = json.load(open('config.json'))['mongodb_write_uri']
+    uri = "mongodb+srv://thesis.cojlj.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
     client = MongoClient(uri,
                      tls=True,
                      tlsCertificateKeyFile='certificates.pem')
