@@ -82,6 +82,7 @@ def get_daily_latest_statistics():
 
 #test
 if __name__ == '__main__':
+    os.system("mkdir -p backup")
     try:
         summary = get_daily_latest_statistics()
 
@@ -96,5 +97,6 @@ if __name__ == '__main__':
                 json.dump(data,json_file)
         with open(backup_summary_path,'w') as json_file:
             json.dump(summary,json_file)
-    except:
+    except Exception as e:
+        print(e)
         pass

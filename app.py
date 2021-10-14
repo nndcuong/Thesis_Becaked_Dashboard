@@ -21,7 +21,7 @@ def hello(name=None):
 @app.route("/old-home", methods=["GET"])
 def old_home():
     return render_template('old_home.html',
-                            name='home',
+                            name='old-home',
                             request=request,
                             countries=countries,
                             data_countries_current=data_countries_current,
@@ -54,7 +54,7 @@ def home(district="hcm"):
                             districts = districts,
                             summary = summary['data'],
                             data = data['data'],
-                            num_cols = [3 + (district == 'HCM'),1 + (district == 'HCM'),1]
+                            num_cols = [6,3,1]
                             )
 
 @app.route("/predict", methods=["GET", "POST"])
@@ -211,7 +211,7 @@ def update_data():
 def main():
     run_init = bool(os.environ.get("INIT_DATA", True))
     data_dir = str(os.environ.get("DATA_DIR", "./web_data"))
-    init(run_init, data_dir)
+    # init(run_init, data_dir)
 
     return app
 
