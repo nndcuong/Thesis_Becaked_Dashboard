@@ -25,13 +25,13 @@
         <h5 style="color:#1B9CFC">Total infectious</h5>
         <h3 style="color: #d1d8e0">{{ "{:,}".format(summary['HCM']['I']['Total']) }}</h3>
       </div>
-      <div class="table-wrapper-scroll-y my-custom-scrollbar left-table">
-        <table class="table table-striped mb-0">
+      <div class="my-custom-scrollbar">
+        <table class="table left-table">
           <tbody>
             {% for district in districts %}
             {% if district != 'HCM' %}
-              <tr class="left-table">
-                <td>{{ district }}</td>
+              <tr class="left-table-row">
+                <td class="btn btn-link district-btn">{{ district }}</td>
                 <td>{{ "{:,}".format(summary[district]['I']['Total']) }}</td>
               </tr>
             {% endif %}
@@ -46,13 +46,13 @@
         <h5 style="color:#1B9CFC">First Dose</h5>
         <h3 style="color: #d1d8e0">{{ "{:,}".format(summary['HCM']['V']['Total']) }}</h3>
       </div>
-      <div class="table-wrapper-scroll-y my-custom-scrollbar left-table">
-        <table class="table table-striped mb-0">
+      <div class="my-custom-scrollbar">
+        <table class="table left-table">
           <tbody>
             {% for district in districts_v %}
             {% if district != 'HCM' %}
-              <tr class="left-table">
-                <td>{{ district }}</td>
+              <tr class="left-table-row">
+                <td class="btn btn-link district-btn">{{ district }}</td>
                 <td>{{ "{:,}".format(summary[district]['V']['Total']) }}</td>
               </tr>
             {% endif %}
@@ -124,7 +124,7 @@
       <div class="container-fluid">
         <div style="width: 39vw; height: 40vh;">
           <canvas id="chart_i" value="infected"></canvas>
-          <button onclick = "resetZoom()">Reset Zoom</button>
+          <!-- <button onclick = "resetZoom()">Reset Zoom</button> -->
         </div>
         <br></br>
         <div style="width: 39vw; height: 40vh;">

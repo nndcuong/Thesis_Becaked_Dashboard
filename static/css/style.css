@@ -71,7 +71,11 @@ body{
   font-family: 'Open Sans Condensed', sans-serif; 
 }
 
-.left-table{
+.left-table, .left-table tr, .left-table td{
+  border: none;
+}
+
+.left-table-row{
   font-size: 1em;
   padding: 0.5em;
   color: #d1d8e0;
@@ -83,6 +87,18 @@ body{
   border-radius: 5px;
   margin-bottom: .5em;
 }
+
+.district-btn, .district-btn:link, .district-btn:visited{
+  color: #d1d8e0;
+  text-decoration: none;
+}
+
+.district-btn:hover{
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
 
 .right-div{
   margin-top: 0.5em;
@@ -114,13 +130,11 @@ body{
 } */
 
 .my-custom-scrollbar {
+  display: block;
   position: relative;
   height: 25vh;
   overflow: auto;
   }
-.table-wrapper-scroll-y {
-  display: block;
-}
 
 hr.white-line{
   border-top: 1px solid #fff;
