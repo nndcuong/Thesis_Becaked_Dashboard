@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-data.js" charset="utf-8"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="{{ url_for('static', filename='js/draw_maps.js') }}"></script>
+<script src="{{ url_for('static', filename='js/draw.js') }}"></script>
+{% endblock %}
+{% block content %}
+
+<!-- <div align="right" style="font-style: italic; font-size: 80%;">Last updated {{ current_day }}</div> -->
+<div class="container-fluid">
+  <div class="row no-padding">
+    <div class="col-2 left-div" align="left">
+      <!-- left -->
+      <div class="left-summary" align="left">
+        <h5 style="color:#1B9CFC">Total infectious</h5>
+        <h3 style="color: #d1d8e0">{{ "{:,}".format(summary['HCM']['I']['Total']) }}</h3>
+      </div>
+      <div class="table-wrapper-scroll-y my-custom-scrollbar left-table">
+        <table class="table table-striped mb-0">
+          <tbody>
+            {% for district in districts %}
+            {% if district != 'HCM' %}
+              <tr class="left-table">
+                <td>{{ district }}</td>
+                <td>{{ "{:,}".format(summary[district]['I']['Total']) }}</td>
+              </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+      <br></br>
+
+      <div class="left-summary" align="left">
+        <h5 style="color:#1B9CFC">First Dose</h5>
+        <h3 style="color: #d1d8e0">{{ "{:,}".format(summary['HCM']['V']['Total']) }}</h3>
+      </div>
+      <div class="table-wrapper-scroll-y my-custom-scrollbar left-table">
+        <table class="table table-striped mb-0">
+          <tbody>
+            {% for district in districts_v %}
+            {% if district != 'HCM' %}
+              <tr class="left-table">
+                <td>{{ district }}</td>
+                <td>{{ "{:,}".format(summary[district]['V']['Total']) }}</td>
+              </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>      
+
+    </div>
+    <div class="col-5" align="left">
+      <!-- center -->
+      <div id="district-title">Ho Chi Minh City</div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="total_infectious_toggle">
+            <h5 style="color: red;"><b>Total Infectious</b></h5>
+            <h6 style="color: red;">{{ "{:,}".format(summary[name]['I']['Total']) }}</h6>
+
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="recovered_toggle">
+            <h5 style="color: blue;"><b>Total Recovered</b></h5>
+            <h6 style="color: blue;">{{ "{:,}".format(summary[name]['R']['Total']) }}</h6>
+
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="deceased_toggle">
+            <h5 style="color: gray;"><b>Total Deceased</b></h5>
+            <h6 style="color: gray;">{{ "{:,}".format(summary[name]['D']['Total']) }}</h6>
+
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="critical_toggle">
+            <h5 style="color: purple;"><b>Current Critical</b></h5>
+            {% if name == 'HCM'%}
+            <h6 style="color: purple;">{{ "{:,}".format(summary[name]['C']['Total']) }}</h6>
+            {% else %}
+            <h6 style="color: purple;">{{ "{}".format('-') }}</h6>
+            {% endif %}
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="vaccinated_toggle">
+            <h5 style="color: #27ae60;"><b>First Dose</b></h5>
+            <h6 style="color: #27ae60;">{{ "{:,}".format(summary[name]['V']['Total']) }}</h6>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="population_toggle">
+            <h5 style="color:chocolate;"><b>Population</b></h5>
+            <h6 style="color: chocolate;">-</h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid" style="height: 50vh; background-color: aliceblue;" id="mapContainer"></div>
+
+      <div class="btn-group d-flex" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-sm btn-dark w-100"
+          onclick="$('#myChart').attr('value','infected'); draw()">total</button>
+        <button type="button" class="btn btn-sm btn-dark w-100"
+          onclick="$('#myChart').attr('value','recovered'); draw()">28 days</button>
+        <button type="button" class="btn btn-sm btn-dark w-100"
+          onclick="$('#myChart').attr('value','deceased'); draw()">7 days</button>
+        <button type="button" class="btn btn-sm btn-dark w-100"
+          onclick="$('#myChart').attr('value','critical'); draw()">infectious</button>
+        <button type="button" class="btn btn-sm btn-dark w-100"
+          onclick="$('#myChart').attr('value','critical'); draw()">first dose</button>
+      </div>
+    </div>
+    <div class="col-5 right-div" align="left">
+      <!-- right -->
+      <div class="container-fluid">
+        <div style="width: 39vw; height: 40vh;">
+          <canvas id="chart_i" value="infected"></canvas>
+          <button onclick = "resetZoom()">Reset Zoom</button>
+        </div>
+        <br></br>
+        <div style="width: 39vw; height: 40vh;">
+          <canvas id="chart_c" value="critical"></canvas>
+        </div>
+        <div style="width: 39vw; height: 40vh;">
+          <canvas id="chart_r" value="infected"></canvas>
+        </div>
+        <div style="width: 39vw; height: 40vh;">
+          <canvas id="chart_d" value="infected"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Create map
+  //=====================================================================================
+  // Initialize the platform object:
+  var platform = new H.service.Platform({
+    'apikey': 'jxMw20pRVwzn8CRpwlU3YDnfLkjszVQ5oY3-RQyS3oc'
+  });
+
+  // Obtain the default map types from the platform object:
+  var defaultLayers = platform.createDefaultLayers();
+
+  // Instantiate (and display) a map object:
+  var map = new H.Map(
+    document.getElementById('mapContainer'),
+    // defaultLayers.vector.normal.map,
+    defaultLayers.raster.normal.mapnight,
+    {
+      // center: {lat:14.058324, lng:108.277199},
+      center: { lat: 10.762622, lng: 106.660172 },
+      // center: {lat: 52, lng: 5},
+      zoom: 10,
+      pixelRatio: window.devicePixelRatio || 1
+    }
+  );
+
+  // add a resize listener to make sure that the map occupies the whole container
+  window.addEventListener('resize', () => map.getViewPort().resize());
+
+  //Step 3: make the map interactive
+  // MapEvents enables the event system
+  // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+  var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+  // Create the default UI components
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+  //=====================================================================================
+
+  // draw
+  showGeoJSONData(map, "{{ url_for('static', filename='data/hcm.json') }}")   //districts boundary
+  var districts = {{ districts| tojson }};
+  var total = {{ total| tojson }};
+  var centre = {{ centre| tojson }};
+
+  districts.forEach(function addCircle(d) {
+    if (d != 'HCM') {
+      o = centre[d]
+      data = total[d]
+      addCircleToMap(map, o, d, data, 'I', 'purple', 'rgba(208, 206, 226, 0.8)')
+    }
+  });
+</script>
+
+
+<script type="text/javascript">
+  // TODO: pass args
+  function draw(id){
+    // var typ = $('input[name=chart-type]:checked').val();
+    var typ = $("#"+id)[0].getAttribute("value");
+    var dates,real,best,normal,worst;
+    // var ctx = document.getElementById('myChart').getContext('2d');
+    dates = {{ total['HCM']['dates']|tojson }}
+
+    if (typ == "infected") {k = "I";} 
+    else if (typ == "recovered") {k = 'R';} 
+    else if (typ == "deceased") {k = 'D';}
+    else if (typ == "critical") {k = 'C';}
+    
+    data = {{ total['HCM']|tojson }}
+    real = data[k]['real'];
+    best = data[k]['BestCase'];
+    normal = data[k]['NormalCase'];
+    worst = data[k]['WorstCase'];
+    draw_3_scenarios(id,dates,real,best,normal,worst);
+  }
+
+  draw('chart_c')
+  draw('chart_d')
+
+  $('#types-form input').on('change', draw);
+</script>
+
+<script type = "text/javascript">
+  $.getJSON('/__load_data?district=hcm&&state=I&&scenario=normal', function(data) {
+        my_chart = draw_chart('chart_i', data)
+    });
+
+  function resetZoom()
+  {
+      my_chart.resetZoom();
+  }
+
+  // $.getJSON('/__load_data?district=hcm&&state=I&&scenario=best', function(data) {
+  //     draw_chart('chart_i', data)
+  // });
+
+  $.getJSON('/__load_data?district=hcm&&state=R&&scenario=normal', function(data) {
+      draw_chart('chart_r', data)
+  });
+  </script>
+
+{% endblock %}

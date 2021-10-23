@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask import render_template
+from flask.helpers import make_response
 from markupsafe import escape
 import os
 from datetime import datetime, timedelta
@@ -9,9 +10,22 @@ import time
 import numpy as np
 import json
 
-from database import get_latest_data, get_daily_latest_statistics
+from database import get_latest_data, get_daily_latest_statistics, check
+from utils import get_nth_last_data
 
 app = Flask(__name__)
+
+@app.route('/reload-db', methods=["POST"])
+def reload():
+    try:
+        token = request.json['token']
+        if check(token):
+            os.system('python3 database.py')
+            return "done"
+        else:
+            return "invalid token"
+    except:
+        return "invalid token"
 
 @app.route("/hello", methods=["GET"])
 @app.route('/hello/<name>', methods=["GET"])
@@ -29,32 +43,91 @@ def old_home():
                             world_series_predict=world_series_predict,
                             current_day=current_day)
 
-@app.route("/", methods=["GET"])
-@app.route("/<district>", methods=["GET"])
-def home(district="hcm"):
-    district = district.upper()
-    district = district.replace('-',' ')
+# @app.route("/", methods=["GET"])
+# @app.route("/<district>", methods=["GET"])
+# def home(district="hcm"):
+#     district = district.upper()
+#     district = district.replace('-',' ')
     
+#     backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
+#     backup_data_path = os.path.join(backup_data_dir,district+'.json')
+#     backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
+#     with open(backup_data_path) as json_file:
+#         data = json.load(json_file)
+#     with open(backup_summary_path) as json_file:
+#         summary = json.load(json_file)
+
+#     districts = ['BINH CHANH', 'BINH TAN', 'BINH THANH', 'CAN GIO', 'CU CHI', 'GO VAP', 'HCM', 'HOC MON', 'NHA BE', 'PHU NHUAN'] + [f'QUAN {i}' for i in [1, 3, 4, 5, 6, 7, 8, 10, 11, 12]] + ['TAN BINH', 'TAN PHU', 'THU DUC']
+#     districts.remove('HCM')
+#     districts.sort()
+#     districts.append('HCM')
+
+#     return render_template('home.html',
+#                             name = district,
+#                             today = data['_id'],
+#                             districts = districts,
+#                             summary = summary['data'],
+#                             data = data['data'],
+#                             num_cols = [6,3,1]
+#                             )
+
+@app.route('/__load_data')
+def load():
+    state = request.args['state']
+    scenario = request.args['scenario']
+    district = ' '.join(request.args['district'].split('_')).upper()
     backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
     backup_data_path = os.path.join(backup_data_dir,district+'.json')
-    backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
-    with open(backup_data_path) as json_file:
-        data = json.load(json_file)
-    with open(backup_summary_path) as json_file:
-        summary = json.load(json_file)
+    content = json.load(open(backup_data_path))
+    dates = content['data'].pop('dates')
+    if scenario == 'best':  
+        data = content['data'][state]['BestCase']
+        scenario = 'Best Scenario'
+    elif scenario == 'normal': 
+        data = content['data'][state]['NormalCase']
+        scenario = 'Normal Scenario'
+    elif scenario == 'worst': 
+        data = content['data'][state]['WorstCase']
+        scenario = 'Worst Scenario'
+    actual_data = content['data'][state]['real']
+    num_real = len(actual_data)
+    actual_data.extend([0] * (len(data) - len(actual_data)))
+    mask = 1 - np.array(actual_data).astype(bool).astype(int)
+    data = (np.array(data) * mask).tolist()
+    return json.dumps({'scenario': scenario, 'dates': dates, 'actual': actual_data, 'data': data})
 
+@app.route("/", methods=["GET"])
+def home():
     districts = ['BINH CHANH', 'BINH TAN', 'BINH THANH', 'CAN GIO', 'CU CHI', 'GO VAP', 'HCM', 'HOC MON', 'NHA BE', 'PHU NHUAN'] + [f'QUAN {i}' for i in [1, 3, 4, 5, 6, 7, 8, 10, 11, 12]] + ['TAN BINH', 'TAN PHU', 'THU DUC']
-    districts.remove('HCM')
-    districts.sort()
-    districts.append('HCM')
+    backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
+    total, month, week = {},{},{}
+    for district in districts:
+        backup_data_path = os.path.join(backup_data_dir,district+'.json')
+        with open(backup_data_path) as json_file:
+            data = json.load(json_file)
+            total[district] = data['data']
+            month[district] = get_nth_last_data(total[district],28)
+            week[district] = get_nth_last_data(total[district],7)
+            today = data['_id']
 
-    return render_template('home.html',
-                            name = district,
-                            today = data['_id'],
+    backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
+    with open(backup_summary_path) as json_file:
+        summary = json.load(json_file)['data']
+
+    districts.sort(key=lambda x:summary[x]['I']['Total'],reverse=True)
+    districts_v = sorted(districts,key=lambda x:summary[x]['V']['Total'],reverse=True)
+    centre = {'BINH CHANH': [10.7080941, 106.59928437], 'BINH THANH': [10.81236736, 106.7106739], 'BINH TAN': [10.76849142, 106.59185577], 'CU CHI': [11.03145621, 106.52149395], 'CAN GIO': [10.508327, 106.8635], 'GO VAP': [10.83800042, 106.66737587], 'HOC MON': [10.88712536, 106.60970238], 'NHA BE': [10.64094082, 106.72282509], 'PHU NHUAN': [10.79897935, 106.67950392], 'QUAN 10': [10.77079414, 106.66866466], 'QUAN 11': [10.76583559, 106.64520678], 'QUAN 12': [10.86093358, 106.65810283], 'QUAN 1': [10.78343482, 106.69548463], 'QUAN 3': [10.78522737, 106.67608034], 'QUAN 4': [10.75829395, 106.70296998], 'QUAN 5': [10.75301895, 106.66929241], 'QUAN 6': [10.74503421, 106.63090987], 'QUAN 7': [10.73376706, 106.72356962], 'QUAN 8': [10.72540308, 106.6435674], 'TAN BINH': [10.81229902, 106.65917519], 'TAN PHU': [10.78907531, 106.62464563], 'THU DUC': [10.82217494, 106.77374533]}
+
+    return render_template('hcm.html',
+                            name = 'HCM',
+                            today = today,
                             districts = districts,
-                            summary = summary['data'],
-                            data = data['data'],
-                            num_cols = [6,3,1]
+                            districts_v = districts_v,
+                            centre = centre,
+                            total = total,
+                            month = month,
+                            week = week,
+                            summary = summary
                             )
 
 @app.route("/predict", methods=["GET", "POST"])

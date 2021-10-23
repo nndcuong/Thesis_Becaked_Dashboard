@@ -3,9 +3,20 @@
   padding: 0px;
 }
 
+body{
+  background-color: #24304b;
+}
+
 .navbar {
   border: 0;
   z-index: 9999;
+  height: 3.5em !important;
+  margin: 0 !important;
+  background-color: #26334f !important;
+}
+
+.container-fluid{
+  padding: 0 !important;
 }
 
 .embed-container {position: relative; padding-bottom: 80%; height: 0; max-width: 100%;}
@@ -33,6 +44,84 @@
   min-width: 30vw;
 }
 
-#distric-title { 
-  color: #111; font-family: 'Open Sans Condensed', sans-serif; font-size: 3em; font-weight: 700; line-height: 48px; margin: 0 0 24px; padding: 0 30px; text-align: center; text-transform: uppercase;
+#district-title { 
+  color: #fff; 
+  font-family: 'Open Sans Condensed', sans-serif; 
+  font-size: 2em; 
+  font-weight: 700; 
+  line-height: 2em; 
+  margin: 0.25em; 
+  padding-top: 0.5em; 
+  padding-bottom: 0.5em;
+  text-align: center; 
+  text-transform: uppercase;
+  background-color: #26334f;
+  /* border: 1px solid #000; */
+  border-radius: 10px;
+}
+
+.left-div{
+  margin-top: 0.5em;
+  padding-top: 1em;
+  padding-left: 0.5em;
+  /* border: 1px solid #000; */
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #1B1464;
+  font-family: 'Open Sans Condensed', sans-serif; 
+}
+
+.left-table{
+  font-size: 1em;
+  padding: 0.5em;
+  color: #d1d8e0;
+}
+
+.left-summary{
+  padding: .25em;
+  background-color: #1e3799;
+  border-radius: 5px;
+  margin-bottom: .5em;
+}
+
+.right-div{
+  margin-top: 0.5em;
+  padding-top: 1em;
+  padding-right: 0.5em;
+  /* border: 1px solid #000; */
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  background-color: #1B1464;
+  font-family: 'Open Sans Condensed', sans-serif; 
+  height: 84vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.no-padding{
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+/** Style for the info bubble content */
+.H_ib_body {
+  width: max-content !important;
+}
+/** Style for the info bubble tail */
+/* .H_ib.H_ib_top .H_ib_tail::after {
+    border-color: rgb(45, 213, 201) transparent !important;
+} */
+
+.my-custom-scrollbar {
+  position: relative;
+  height: 25vh;
+  overflow: auto;
+  }
+.table-wrapper-scroll-y {
+  display: block;
+}
+
+hr.white-line{
+  border-top: 1px solid #fff;
 }

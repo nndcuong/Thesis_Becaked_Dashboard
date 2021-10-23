@@ -6,10 +6,10 @@ import shutil
 from datetime import datetime as dt, timedelta
 import sys
 
-def remove_v2_path(folder_name = 'data'):
-    all_csv_paths = glob.glob(f'{folder_name}/*/v2/*/*/*.csv')
+def remove_version_path(folder_name = 'data'):
+    all_csv_paths = glob.glob(f'{folder_name}/*/v5/*/*/*.csv')
     for path in all_csv_paths:
-        new_path = path.replace('/v2', '')
+        new_path = path.replace('/v5', '')
         new_dir = new_path.rsplit('/', 1)[0]
         if not os.path.exists(new_dir):
             os.system(f'mkdir -p "{new_dir}"')
@@ -154,7 +154,7 @@ def update_cummulative_info(db, folder_name, insert_all = False):
         pre_date = dt.strptime(f'{date}/{month}/21', '%d/%m/%y') - timedelta(days = 1)
         curr_date = f'{pre_date.month}.{pre_date.day}'
 
-    df = pd.read_excel('SEIRD_data_12_7_2021.xlsx', sheet_name = None)
+    df = pd.read_excel('data.xlsx', sheet_name = None)
     df_I = df['Infectious']
     districts = list(df_I.columns)[1:]
     dates = df_I['Date'].apply(lambda x: dt.strftime(x, '%m.%d')).values.tolist()
@@ -206,7 +206,7 @@ def update_cummulative_info(db, folder_name, insert_all = False):
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         folder_name = sys.argv[1]
-        remove_v2_path(folder_name)
+        remove_version_path(folder_name)
 
 
     uri = "mongodb+srv://thesis.cojlj.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
