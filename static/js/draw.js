@@ -127,9 +127,6 @@ function draw_chart(id, data)
                 },
                 plugins: {
                     zoom: {
-                        pan: {
-                            enabled: false,
-                        },
                         zoom: {
                             drag: {
                                 enabled: true,
@@ -141,4 +138,4 @@ function draw_chart(id, data)
                 maintainAspectRatio: false,
             }
         });
-    }
+}
