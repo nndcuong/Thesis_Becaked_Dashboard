@@ -27,7 +27,7 @@
   <div class="row no-padding">
     <div class="col-2 left-div" align="left">
       <!-- left -->
-      <div class="left-summary" align="left">
+      <div class="left-summary" role="button" align="left" onclick="window.location.reload()">
         <h5 style="color:#1B9CFC">Total infectious</h5>
         <h3 style="color: #d1d8e0">{{ "{:,}".format(summary['HCM']['I']['Total']) }}</h3>
       </div>
@@ -36,8 +36,8 @@
           <tbody>
             {% for district in districts %}
             {% if district != 'HCM' %}
-              <tr class="left-table" onclick = "load_district(this)">
-                <td>{{ district }}</td>
+              <tr class="left-table-row" onclick = "load_district(this)">
+                <td class="btn btn-link district-btn">{{ district }}</td>
                 <td>{{ "{:,}".format(summary[district]['I']['Total']) }}</td>
               </tr>
             {% endif %}
@@ -48,7 +48,7 @@
       
       <br></br>
 
-      <div class="left-summary" align="left">
+      <div class="left-summary" role="button" align="left" onclick="window.location.reload()">
         <h5 style="color:#1B9CFC">First Dose</h5>
         <h3 style="color: #d1d8e0">{{ "{:,}".format(summary['HCM']['V']['Total']) }}</h3>
       </div>
@@ -57,8 +57,8 @@
           <tbody>
             {% for district in districts_v %}
             {% if district != 'HCM' %}
-              <tr class="left-table" onclick = "load_district(this)">
-                <td>{{ district }}</td>
+              <tr class="left-table-row" onclick = "load_district(this)">
+                <td class="btn btn-link district-btn">{{ district }}</td>
                 <td>{{ "{:,}".format(summary[district]['V']['Total']) }}</td>
               </tr>
             {% endif %}
@@ -76,26 +76,6 @@
           <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="total_infectious_toggle">
             <h5 style="color: red;"><b>Total Infectious</b></h5>
             <h6 style="color: red;">{{ "{:,}".format(summary[name]['I']['Total']) }}</h6>
-
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="recovered_toggle">
-            <h5 style="color: blue;"><b>Total Recovered</b></h5>
-            <h6 style="color: blue;">{{ "{:,}".format(summary[name]['R']['Total']) }}</h6>
-
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="deceased_toggle">
-            <h5 style="color: gray;"><b>Total Deceased</b></h5>
-            <h6 style="color: gray;">{{ "{:,}".format(summary[name]['D']['Total']) }}</h6>
-
-          </div>
-
-          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="critical_toggle">
-            <h5 style="color: purple;"><b>Current Critical</b></h5>
-            {% if name == 'HCM'%}
-            <h6 style="color: purple;">{{ "{:,}".format(summary[name]['C']['Total']) }}</h6>
-            {% else %}
-            <h6 style="color: purple;">{{ "{}".format('-') }}</h6>
-            {% endif %}
           </div>
 
           <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="vaccinated_toggle">
@@ -106,6 +86,25 @@
           <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="population_toggle">
             <h5 style="color:chocolate;"><b>Population</b></h5>
             <h6 style="color: chocolate;">-</h6>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="recovered_toggle">
+            <h5 style="color: blue;"><b>Total Recovered</b></h5>
+            <h6 style="color: blue;">{{ "{:,}".format(summary[name]['R']['Total']) }}</h6>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="deceased_toggle">
+            <h5 style="color: gray;"><b>Total Deceased</b></h5>
+            <h6 style="color: gray;">{{ "{:,}".format(summary[name]['D']['Total']) }}</h6>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="critical_toggle">
+            <h5 style="color: purple;"><b>Current Critical</b></h5>
+            {% if name == 'HCM'%}
+            <h6 style="color: purple;">{{ "{:,}".format(summary[name]['C']['Total']) }}</h6>
+            {% else %}
+            <h6 style="color: purple;">{{ "{}".format('-') }}</h6>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -125,33 +124,39 @@
           onclick="$('#myChart').attr('value','critical'); draw()">first dose</button>
       </div>
     </div>
-    <div class="col-5 right-div" align="left">
-      <div class="btn-group d-flex" role="group" aria-label="Basic example">
-        <div id = "scenario"></div>
-        <button type="button" class="btn btn-sm btn-dark w-100"
-          onclick="$('#scenario').attr('value','best'); load_chart();">Best Scenario</button>
-        <button type="button" class="btn btn-sm btn-dark w-100"
-          onclick="$('#scenario').attr('value','normal'); load_chart();">Normal Scenario</button>
-        <button type="button" class="btn btn-sm btn-dark w-100"
-          onclick="$('#scenario').attr('value','worst'); load_chart();">Worst Scenario</button>
-      </div>
+    <div class="col-5" align="left">
       <!-- right -->
-      <div class="container-fluid">
-        <div style="width: 39vw; height: 40vh;">
-          <canvas id="chart_i" value="infected"></canvas>
-          <button onclick = "resetZoom(my_chart_i)">Reset Zoom</button>
+      <div class="scenarios">
+        <div class="btn-group d-flex" role="group" aria-label="Basic example">
+          <div id = "scenario"></div>
+          <button type="button" class="btn btn-sm btn-dark w-100"
+            onclick="$('#scenario').attr('value','best'); load_chart();">Best Scenario</button>
+          <button type="button" class="btn btn-sm btn-dark w-100"
+            onclick="$('#scenario').attr('value','normal'); load_chart();">Normal Scenario</button>
+          <button type="button" class="btn btn-sm btn-dark w-100"
+            onclick="$('#scenario').attr('value','worst'); load_chart();">Worst Scenario</button>
+          <button type="button" class="btn btn-sm btn-dark w-100"
+            onclick = "resetZoom(my_chart_i); resetZoom(my_chart_r); resetZoom(my_chart_d); resetZoom(my_chart_c)">Reset Zoom</button>
         </div>
-        <br></br>
-        <div style="width: 39vw; height: 40vh;">
-          <canvas id="chart_c" value="critical"></canvas>
+      </div>
+      <div class="container-fluid right-charts">
+        <div style="width: 37vw; height: 40vh;">
+          <h5 style="color:#1B9CFC">Infected</h5>
+          <canvas id="chart_i"></canvas>
         </div>
-        <div style="width: 39vw; height: 40vh;">
-          <canvas id="chart_r" value="recovered"></canvas>
-          <button onclick = "resetZoom(my_chart_r)">Reset Zoom</button>
+        
+        <div style="width: 37vw; height: 40vh;">
+          <h5 style="color:#1B9CFC">Recovered</h5>          
+          <canvas id="chart_r"></canvas>
         </div>
-        <br></br>
-        <div style="width: 39vw; height: 40vh;">
-          <canvas id="chart_d" value="infected"></canvas>
+
+        <div style="width: 37vw; height: 40vh;">
+          <h5 style="color:#1B9CFC">Deceased</h5>
+          <canvas id="chart_d"></canvas>
+        </div>
+        <div style="width: 37vw; height: 40vh;" id="critical-chart">
+          <h5 style="color:#1B9CFC">Critical</h5>
+          <canvas id="chart_c"></canvas>
         </div>
       </div>
     </div>
@@ -211,7 +216,7 @@
 
 
 <script type="text/javascript">
-  // TODO: pass args
+  // NOT USE
   function draw(id){
     // var typ = $('input[name=chart-type]:checked').val();
     var typ = $("#"+id)[0].getAttribute("value");
@@ -232,14 +237,30 @@
     draw_3_scenarios(id,dates,real,best,normal,worst);
   }
 
-  draw('chart_c')
-  draw('chart_d')
+  // draw('chart_c')
+  // draw('chart_d')
 
-  $('#types-form input').on('change', draw);
+  // $('#types-form input').on('change', draw);
 </script>
 
 <script type = "text/javascript">
   _district = 'hcm';
+
+  function load_summary(){
+    summary = {{ summary|tojson }};
+    i = Number(summary[_district]['I']['Total']).toLocaleString()
+    r = Number(summary[_district]['R']['Total']).toLocaleString()
+    d = Number(summary[_district]['D']['Total']).toLocaleString()
+    v = Number(summary[_district]['V']['Total']).toLocaleString()
+    c = _district == 'hcm' ? Number(summary[_district]['C']['Total']).toLocaleString() : '-'
+
+    $("#total_infectious_toggle h6").text(i)
+    $("#vaccinated_toggle h6").text(r)
+    $("#recovered_toggle h6").text(d)
+    $("#deceased_toggle h6").text(v)
+    $("#critical_toggle h6").text(c)
+  }
+
   function resetZoom(x)
   {
     x.resetZoom();
@@ -247,6 +268,8 @@
   function load_chart(){
     load_chart_i();
     load_chart_r();
+    load_chart_d();
+    load_chart_c();
   }
   function load_chart_i()
   {
@@ -264,15 +287,34 @@
       my_chart_r = draw_chart('chart_r', data)
      });
   }
+  function load_chart_d()
+  {
+    scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
+    my_chart_d.destroy();
+    $.getJSON('/__load_data?district='+_district+'&&state=D&&scenario='+scenario, function(data) {
+      my_chart_d = draw_chart('chart_d', data)
+     });
+  }
+  function load_chart_c()
+  {
+    my_chart_c.destroy();
+    if (_district == 'hcm'){
+      scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
+      $.getJSON('/__load_data?district='+_district+'&&state=C&&scenario='+scenario, function(data) {
+        my_chart_c = draw_chart('chart_c', data)
+      });
+    }
+    else {
+      $('#critical-chart').remove()
+    }
+  }
   function load_district(x){
       _district = x.children[0].innerText;
       $("#district-title").text(_district);
       load_chart();
+      load_summary();
   }
 
-  // $.getJSON('/__load_data?district=hcm&&state=I&&scenario=best', function(data) {
-  //     draw_chart('chart_i', data)
-  // });
   scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
   $.getJSON('/__load_data?district='+_district+'&&state=I&&scenario='+scenario, function(data) {
       my_chart_i = draw_chart('chart_i', data)
@@ -280,6 +322,18 @@
   $.getJSON('/__load_data?district='+_district+'&&state=R&&scenario='+scenario, function(data) {
       my_chart_r = draw_chart('chart_r', data)
   });
+  $.getJSON('/__load_data?district='+_district+'&&state=D&&scenario='+scenario, function(data) {
+      my_chart_d = draw_chart('chart_d', data)
+  });
+  $.getJSON('/__load_data?district='+_district+'&&state=C&&scenario='+scenario, function(data) {
+      my_chart_c = draw_chart('chart_c', data)
+  });
   </script>
 
+{% endblock %}
+
+{% block lastupdate %}
+<div style="position:absolute; left: 20px; bottom: 20px; font-style: italic; font-size: 80%; color: #fff">
+  Last updated {{ today }}
+</div>
 {% endblock %}

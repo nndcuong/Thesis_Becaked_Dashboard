@@ -104,12 +104,12 @@ function draw_chart(id, data)
                 ]
             },
             options: {
-                tooltips: {
-                    displayColors: true,
-                    callbacks:{
-                        mode: 'x',
-                    },
-                },
+                // tooltips: {
+                //     displayColors: true,
+                //     callbacks:{
+                //         mode: 'x',
+                //     },
+                // },
                 scales: {
                     xAxes: [{
                         stacked: true,
@@ -132,7 +132,13 @@ function draw_chart(id, data)
                                 enabled: true,
                             }
                         }
-                    }
+                    },
+                    legend: {
+                        display: false
+                     },
+                     tooltips: {
+                        enabled: false
+                     },
                 },
                 responsive: true,
                 maintainAspectRatio: false,

@@ -100,18 +100,37 @@ body{
 }
 
 
-.right-div{
+.right-charts{
   margin-top: 0.5em;
   padding-top: 1em;
-  padding-right: 0.5em;
+  padding-left: 0.5em;
   /* border: 1px solid #000; */
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   background-color: #1B1464;
   font-family: 'Open Sans Condensed', sans-serif; 
-  height: 84vh;
+  height: 77vh;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+.right-charts h5{
+  margin-top: 1em;
+  text-align: center;
+}
+
+.right-charts canvas{
+  padding-bottom: 1em;
+  margin-left: 1em;
+}
+
+.scenarios{
+  position: sticky; 
+  top: 0px; 
+  margin-top: 0.5em;
+  padding-top: 1em;
+  padding-left: 0.5em;
+  font-family: 'Open Sans Condensed', sans-serif; 
 }
 
 .no-padding{

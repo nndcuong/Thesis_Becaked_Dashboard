@@ -109,6 +109,11 @@ def home():
             month[district] = get_nth_last_data(total[district],28)
             week[district] = get_nth_last_data(total[district],7)
             today = data['_id']
+            
+            #get yesterdate
+            today = datetime.strptime(today,'%m.%d') - timedelta(1)
+            today = today.replace(year=2021,hour=18)
+            today = today.strftime('%Y-%b-%d %H:%M')
 
     backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
     with open(backup_summary_path) as json_file:
