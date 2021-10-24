@@ -102,7 +102,11 @@
   </div>
 
   <footer class="page-footer font-small blue">
-    <div class="footer-copyright text-center py-3" style="color: #fff;">
+    {% if name == 'HCM'%}
+    <div class="footer-copyright text-center py-3 hcm-homepage" style="color: #fff">
+    {% else %}
+    <div class="footer-copyright text-center py-3">
+    {% endif %}
     {% block lastupdate %}{% endblock %}
      Copyright &copy 2020 BeCaked. All rights reserved.
     </div>

@@ -3,18 +3,19 @@
   padding: 0px;
 }
 
-*:not(.center-summary *){
+/* *:not(.center-summary *, .H_ib_body *){
   color: #fff;
-}
+} */
 
-body{
+.hcm-homepage{
   background-color: #24304b;
+  color: #fff;
 }
 
 .navbar {
   border: 0;
   z-index: 9999;
-  height: 3.5em !important;
+  height: 3.8em !important;
   margin: 0 !important;
   background-color: #26334f !important;
 }

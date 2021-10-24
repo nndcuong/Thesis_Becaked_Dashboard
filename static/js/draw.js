@@ -73,20 +73,22 @@ function draw_3_scenarios(id,dates,real,best,normal,worst) {
 }
 
 
-function draw_chart(id, data)
+function draw_chart(id, data, days)
    {
         dates = data['dates']
         actual_data = data['actual']
         scenario = data['scenario']
         best_scenario = data['data']
+        days = Number(days)
+        days = days==-1 ? dates.length : days + 31
         return new Chart(id, {
             type: 'bar',
             data: {
-                labels: dates,
+                labels: dates.slice(-days),
                 datasets: [
                 {
                     label: 'Actual',
-                    data: actual_data,
+                    data: actual_data.slice(-days),
                     borderWidth: 1.,
                     barPercentage: 1.0,
                     categoryPercentage: 1.0,
@@ -95,7 +97,7 @@ function draw_chart(id, data)
                 },
                 {
                     label: scenario,
-                    data: best_scenario,
+                    data: best_scenario.slice(-days),
                     barPercentage: 1.0,
                     categoryPercentage: 1.0,
                     backgroundColor: "#2e5468",

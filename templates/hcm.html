@@ -15,7 +15,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.1.1/chartjs-plugin-zoom.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-  Chart.register(zoomPlugin);
+  // Chart.register(zoomPlugin);
 </script>
 <script src="{{ url_for('static', filename='js/draw_maps.js') }}"></script>
 <script src="{{ url_for('static', filename='js/draw.js') }}"></script>
@@ -23,7 +23,7 @@
 {% block content %}
 
 <!-- <div align="right" style="font-style: italic; font-size: 80%;">Last updated {{ current_day }}</div> -->
-<div class="container-fluid">
+<div class="container-fluid hcm-homepage">
   <div class="row no-padding">
     <div class="col-2 left-div" align="left">
       <!-- left -->
@@ -112,9 +112,10 @@
       <div class="container-fluid" style="height: 50vh; background-color: aliceblue;" id="mapContainer"></div>
 
       <div class="btn-group d-flex" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-sm btn-dark w-100 active g-time" onclick="check(this,'g-time')">total</button>
-        <button type="button" class="btn btn-sm btn-dark w-100 g-time" onclick="check(this,'g-time')">28 days</button>
-        <button type="button" class="btn btn-sm btn-dark w-100 g-time" onclick="check(this,'g-time')">7 days</button>
+        <div id="days" value=-1></div>
+        <button type="button" class="btn btn-sm btn-dark w-100 active g-time" onclick="check(this,'g-time'); draw_map(); $('#days')[0].setAttribute('value',-1); load_chart()">total</button>
+        <button type="button" class="btn btn-sm btn-dark w-100 g-time" onclick="check(this,'g-time'); draw_map(); $('#days')[0].setAttribute('value',28); load_chart()">28 days</button>
+        <button type="button" class="btn btn-sm btn-dark w-100 g-time" onclick="check(this,'g-time'); draw_map(); $('#days')[0].setAttribute('value',7); load_chart()">7 days</button>
         <button type="button" class="btn btn-sm btn-dark w-100 active g-type" onclick="check(this,'g-type')">infectious</button>
         <button type="button" class="btn btn-sm btn-dark w-100 g-type" onclick="check(this,'g-type')">first dose</button>
       </div>
@@ -174,7 +175,7 @@
 </script>
 
 <script>
-  // Create map
+  // Draw map
   //=====================================================================================
   // Initialize the platform object:
   var platform = new H.service.Platform({
@@ -211,16 +212,31 @@
   // draw
   showGeoJSONData(map, "{{ url_for('static', filename='data/hcm.json') }}")   //districts boundary
   var districts = {{ districts| tojson }};
-  var total = {{ total| tojson }};
-  var centre = {{ centre| tojson }};
 
-  districts.forEach(function addCircle(d) {
-    if (d != 'HCM') {
-      o = centre[d]
-      data = total[d]
-      addCircleToMap(map, o, d, data, 'I', 'purple', 'rgba(208, 206, 226, 0.8)')
+  function draw_map(){
+    var time = $('.g-time.active')[0].innerHTML;
+    if (time == 'total') {
+     data = {{ total| tojson }};
     }
-  });
+    else if (time == '28 days') {
+      data = {{ month|tojson }}
+    }
+    else{
+      data = {{ week|tojson }}
+    }
+    
+    var centre = {{ centre| tojson }};
+    if (typeof map!== "undefined") removeAllCircle(map);
+    districts.forEach(function addCircle(d) {
+      if (d != 'HCM') {
+        o = centre[d]
+        d_data = data[d]
+        addCircleToMap(map, ui, o, d, d_data, 'I', 'purple', 'rgba(208, 206, 226, 0.8)')
+      }
+    });
+  }
+
+  draw_map()
 </script>
 
 
@@ -275,6 +291,7 @@
     x.resetZoom();
   }
   function load_chart(){
+    days = $("#days")[0].getAttribute('value');
     load_chart_i();
     load_chart_r();
     load_chart_d();
@@ -285,7 +302,7 @@
     scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
     my_chart_i.destroy();
     $.getJSON('/__load_data?district='+_district+'&&state=I&&scenario='+scenario, function(data) {
-      my_chart_i = draw_chart('chart_i', data)
+      my_chart_i = draw_chart('chart_i', data,days)
      });
   }
   function load_chart_r()
@@ -293,7 +310,7 @@
     scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
     my_chart_r.destroy();
     $.getJSON('/__load_data?district='+_district+'&&state=R&&scenario='+scenario, function(data) {
-      my_chart_r = draw_chart('chart_r', data)
+      my_chart_r = draw_chart('chart_r', data,days)
      });
   }
   function load_chart_d()
@@ -301,7 +318,7 @@
     scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
     my_chart_d.destroy();
     $.getJSON('/__load_data?district='+_district+'&&state=D&&scenario='+scenario, function(data) {
-      my_chart_d = draw_chart('chart_d', data)
+      my_chart_d = draw_chart('chart_d', data,days)
      });
   }
   function load_chart_c()
@@ -310,7 +327,7 @@
     if (_district == 'hcm'){
       scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
       $.getJSON('/__load_data?district='+_district+'&&state=C&&scenario='+scenario, function(data) {
-        my_chart_c = draw_chart('chart_c', data)
+        my_chart_c = draw_chart('chart_c', data,days)
       });
     }
     else {
@@ -326,23 +343,23 @@
 
   scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
   $.getJSON('/__load_data?district='+_district+'&&state=I&&scenario='+scenario, function(data) {
-      my_chart_i = draw_chart('chart_i', data)
+      my_chart_i = draw_chart('chart_i', data,days)
   });
   $.getJSON('/__load_data?district='+_district+'&&state=R&&scenario='+scenario, function(data) {
-      my_chart_r = draw_chart('chart_r', data)
+      my_chart_r = draw_chart('chart_r', data,days)
   });
   $.getJSON('/__load_data?district='+_district+'&&state=D&&scenario='+scenario, function(data) {
-      my_chart_d = draw_chart('chart_d', data)
+      my_chart_d = draw_chart('chart_d', data,days)
   });
   $.getJSON('/__load_data?district='+_district+'&&state=C&&scenario='+scenario, function(data) {
-      my_chart_c = draw_chart('chart_c', data)
+      my_chart_c = draw_chart('chart_c', data,days)
   });
   </script>
 
 {% endblock %}
 
 {% block lastupdate %}
-<div style="position:absolute; left: 20px; bottom: 20px; font-style: italic; font-size: 80%; color: #fff">
+<div style="position:absolute; left: 3vw; bottom: 2vh; font-style: italic; font-size: 80%; color: #fff">
   Last updated {{ today }}
 </div>
 {% endblock %}
