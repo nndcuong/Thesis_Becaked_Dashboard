@@ -37,6 +37,8 @@ def prepare_all_data(folder_name = 'data'):
                 compartment = 'D'
             elif 'critical' in name or 'ecmo' in name:
                 compartment = 'C'
+            elif 'vaccinated' in name:
+                compartment = 'V'
             else: continue
             if date not in data[district]:
                 data[district][date] = {}
@@ -71,8 +73,8 @@ def refactor_date(folder):
         for date in dates:
             for case in ['NormalCase', 'BestCase', 'WorstCase']:
                 path = f'{folder}/{date}/{district}/{case}/'
-                sd_i, sd_r, sd_d = None, None, None
-                df_I, df_R, df_D = None, None, None
+                sd_i, sd_r, sd_d, sd_v = None, None, None, None
+                df_I, df_R, df_D, df_V = None, None, None, None
                 try:
                     df_I = pd.read_csv(path + 'daily_infectious.csv')
                     sd_i = dt.strptime(df_I['Date'].values[0] + '/21', '%d/%m/%y')
@@ -85,45 +87,102 @@ def refactor_date(folder):
                     df_D = pd.read_csv(path + 'total_deceased.csv')
                     sd_d = dt.strptime(df_D['Date'].values[0]+ '/21', '%d/%m/%y')
                 except: pass
-                if sd_i is not None and sd_d is not None and sd_r is not None:
-                    if sd_i == sd_r == sd_d: continue
-                    m_date = max(sd_i, max(sd_d, sd_r))
-                    if sd_i < m_date:
-                        df_I = df_I.loc[(m_date - sd_i).days:]
-                        df_I.to_csv(path + 'daily_infectious.csv', index = False)
-                    if sd_d < m_date:
-                        df_D = df_D.loc[(m_date - sd_d).days:]
-                        df_D.to_csv(path + 'total_deceased.csv', index = False)
-                    if sd_r < m_date:
-                        df_R = df_R.loc[(m_date - sd_r).days:]
-                        df_R.to_csv(path + 'total_recovered.csv', index = False)
-                elif sd_d is not None and sd_r is not None:
-                    if sd_r == sd_d: continue
-                    m_date = max(sd_d, sd_r)
-                    if sd_d < m_date:
-                        df_D = df_D.loc[(m_date - sd_d).days:]
-                        df_D.to_csv(path + 'total_deceased.csv', index = False)
-                    if sd_r < m_date:
-                        df_R = df_R.loc[(m_date - sd_r).days:]
-                        df_R.to_csv(path + 'total_recovered.csv', index = False)
-                elif sd_i is not None and sd_r is not None:
-                    if sd_r == sd_i: continue
-                    m_date = max(sd_i, sd_r)
-                    if sd_i < m_date:
-                        df_I = df_I.loc[(m_date - sd_i).days:]
-                        df_I.to_csv(path + 'daily_infectious.csv', index = False)
-                    if sd_r < m_date:
-                        df_R = df_R.loc[(m_date - sd_r).days:]
-                        df_R.to_csv(path + 'total_recovered.csv', index = False)
-                elif sd_d is not None and sd_i is not None:
-                    if sd_d == sd_i: continue
-                    m_date = max(sd_i, sd_d)
-                    if sd_i < m_date:
-                        df_I = df_I.loc[(m_date - sd_i).days:]
-                        df_I.to_csv(path + 'daily_infectious.csv', index = False)
-                    if sd_d < m_date:
-                        df_D = df_D.loc[(m_date - sd_d).days:]
-                        df_D.to_csv(path + 'total_deceased.csv', index = False)
+                try:
+                    df_V = pd.read_csv(path + 'total_vaccinated.csv')
+                    sd_v = dt.strptime(df_V['Date'].values[0]+ '/21', '%d/%m/%y')
+                except: pass
+                if sd_v is None:
+                    if sd_i is not None and sd_d is not None and sd_r is not None:
+                        if sd_i == sd_r == sd_d: continue
+                        m_date = max(sd_i, max(sd_d, sd_r))
+                        if sd_i < m_date:
+                            df_I = df_I.loc[(m_date - sd_i).days:]
+                            df_I.to_csv(path + 'daily_infectious.csv', index = False)
+                        if sd_d < m_date:
+                            df_D = df_D.loc[(m_date - sd_d).days:]
+                            df_D.to_csv(path + 'total_deceased.csv', index = False)
+                        if sd_r < m_date:
+                            df_R = df_R.loc[(m_date - sd_r).days:]
+                            df_R.to_csv(path + 'total_recovered.csv', index = False)
+                    elif sd_d is not None and sd_r is not None:
+                        if sd_r == sd_d: continue
+                        m_date = max(sd_d, sd_r)
+                        if sd_d < m_date:
+                            df_D = df_D.loc[(m_date - sd_d).days:]
+                            df_D.to_csv(path + 'total_deceased.csv', index = False)
+                        if sd_r < m_date:
+                            df_R = df_R.loc[(m_date - sd_r).days:]
+                            df_R.to_csv(path + 'total_recovered.csv', index = False)
+                    elif sd_i is not None and sd_r is not None:
+                        if sd_r == sd_i: continue
+                        m_date = max(sd_i, sd_r)
+                        if sd_i < m_date:
+                            df_I = df_I.loc[(m_date - sd_i).days:]
+                            df_I.to_csv(path + 'daily_infectious.csv', index = False)
+                        if sd_r < m_date:
+                            df_R = df_R.loc[(m_date - sd_r).days:]
+                            df_R.to_csv(path + 'total_recovered.csv', index = False)
+                    elif sd_d is not None and sd_i is not None:
+                        if sd_d == sd_i: continue
+                        m_date = max(sd_i, sd_d)
+                        if sd_i < m_date:
+                            df_I = df_I.loc[(m_date - sd_i).days:]
+                            df_I.to_csv(path + 'daily_infectious.csv', index = False)
+                        if sd_d < m_date:
+                            df_D = df_D.loc[(m_date - sd_d).days:]
+                            df_D.to_csv(path + 'total_deceased.csv', index = False)
+                else:
+                    if sd_i is not None and sd_d is not None and sd_r is not None:
+                        if sd_i == sd_r == sd_d == sd_v: continue
+                        m_date = max(sd_i, max(sd_d, max(sd_r, sd_v)))
+                        if sd_i < m_date:
+                            df_I = df_I.loc[(m_date - sd_i).days:]
+                            df_I.to_csv(path + 'daily_infectious.csv', index = False)
+                        if sd_d < m_date:
+                            df_D = df_D.loc[(m_date - sd_d).days:]
+                            df_D.to_csv(path + 'total_deceased.csv', index = False)
+                        if sd_r < m_date:
+                            df_R = df_R.loc[(m_date - sd_r).days:]
+                            df_R.to_csv(path + 'total_recovered.csv', index = False)
+                        if sd_v < m_date:
+                            df_V = df_V.loc[(m_date - sd_v).days:]
+                            df_V.to_csv(path +'total_vaccinated.csv', index = False)
+                    elif sd_d is not None and sd_r is not None:
+                        if sd_r == sd_d == sd_v: continue
+                        m_date = max(sd_d, max(sd_r, sd_v))
+                        if sd_d < m_date:
+                            df_D = df_D.loc[(m_date - sd_d).days:]
+                            df_D.to_csv(path + 'total_deceased.csv', index = False)
+                        if sd_r < m_date:
+                            df_R = df_R.loc[(m_date - sd_r).days:]
+                            df_R.to_csv(path + 'total_recovered.csv', index = False)
+                        if sd_v < m_date:
+                            df_V = df_V.loc[(m_date - sd_v).days:]
+                            df_V.to_csv(path +'total_vaccinated.csv', index = False)
+                    elif sd_i is not None and sd_r is not None:
+                        if sd_r == sd_i == sd_v: continue
+                        m_date = max(sd_i, max(sd_r, sd_v))
+                        if sd_i < m_date:
+                            df_I = df_I.loc[(m_date - sd_i).days:]
+                            df_I.to_csv(path + 'daily_infectious.csv', index = False)
+                        if sd_r < m_date:
+                            df_R = df_R.loc[(m_date - sd_r).days:]
+                            df_R.to_csv(path + 'total_recovered.csv', index = False)
+                        if sd_v < m_date:
+                            df_V = df_V.loc[(m_date - sd_v).days:]
+                            df_V.to_csv(path +'total_vaccinated.csv', index = False)
+                    elif sd_d is not None and sd_i is not None:
+                        if sd_d == sd_i == sd_v: continue
+                        m_date = max(sd_i, max(sd_d, sd_v))
+                        if sd_i < m_date:
+                            df_I = df_I.loc[(m_date - sd_i).days:]
+                            df_I.to_csv(path + 'daily_infectious.csv', index = False)
+                        if sd_d < m_date:
+                            df_D = df_D.loc[(m_date - sd_d).days:]
+                            df_D.to_csv(path + 'total_deceased.csv', index = False)
+                        if sd_v < m_date:
+                            df_V = df_V.loc[(m_date - sd_v).days:]
+                            df_V.to_csv(path +'total_vaccinated.csv', index = False)
 
 
                 
