@@ -16,6 +16,39 @@ from datetime import datetime, timedelta
 def update_data():
     os.system("cd COVID-19 && git pull origin master")
 
+def get_daily_data(data):
+    """
+        data: {"I":{"NormalCase":[...],
+                    "BestCase"  :[...],
+                    "WorstCase" :[...],
+                    "real"      :[...]}
+               "R":{...},
+               "D":{...},
+               "V":{...},
+               "dates":[...],
+    (option)   "C":{...}}
+
+        Return:
+            daily data
+    """
+    keys = ['R','D','V']
+    out = {}
+    for typ in data:
+        subout = {}
+        if typ != 'dates':
+            for case in data[typ]:
+                if typ in keys:
+                    temp = np.array(data[typ][case][1:]) - np.array(data[typ][case][:-1])
+                    temp[temp < 0] = 0
+                    subout[case] = temp.tolist()
+                else:
+                    subout[case] = data[typ][case][1:]
+        else:
+            subout = data[typ][1:]
+        
+        out[typ] = subout
+    return out
+
 def get_nth_last_data(data,n):
     """
         data: {"I":{"NormalCase":[...],

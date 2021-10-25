@@ -11,7 +11,7 @@ import numpy as np
 import json
 
 from database import get_latest_data, get_daily_latest_statistics, check
-from utils import get_nth_last_data
+from utils import *
 
 app = Flask(__name__)
 
@@ -90,6 +90,23 @@ def load():
         data = content['data'][state]['WorstCase']
         scenario = 'Worst Scenario'
     actual_data = content['data'][state]['real']
+
+    if state.upper() in ['R','D','V']:
+        temp = np.array(data)
+        temp = temp[1:] - temp[:-1]
+        temp[temp < 0] = 0
+        data[1:] = temp.tolist()
+        # data[0] -= actual_data[-1]
+
+        temp = np.array(actual_data)
+        temp = temp[1:] - temp[:-1]
+        temp[temp < 0] = 0
+        actual_data[1:] = temp.tolist()
+    
+    data = data[1:]
+    actual_data = actual_data[1:]
+    dates = dates[1:]
+
     num_real = len(actual_data)
     actual_data.extend([0] * (len(data) - len(actual_data)))
     mask = 1 - np.array(actual_data).astype(bool).astype(int)
@@ -105,7 +122,8 @@ def home():
         backup_data_path = os.path.join(backup_data_dir,district+'.json')
         with open(backup_data_path) as json_file:
             data = json.load(json_file)
-            total[district] = data['data']
+            raw = data['data']
+            total[district] = get_daily_data(raw)
             month[district] = get_nth_last_data(total[district],28)
             week[district] = get_nth_last_data(total[district],7)
             today = data['_id']
@@ -291,7 +309,7 @@ def update_data():
 def main():
     run_init = bool(os.environ.get("INIT_DATA", True))
     data_dir = str(os.environ.get("DATA_DIR", "./web_data"))
-    init(run_init, data_dir)
+    # init(run_init, data_dir)
 
     return app
 
