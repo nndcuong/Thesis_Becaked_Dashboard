@@ -85,7 +85,7 @@
 
           <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="population_toggle">
             <h5 style="color:chocolate;"><b>Population</b></h5>
-            <h6 style="color: chocolate;">-</h6>
+            <h6 style="color: chocolate;">{{ "{:,}".format(population[name]) }}</h6>
           </div>
 
           <div class="col-lg-4 col-md-4 col-sm-1" align="center" id="recovered_toggle">
@@ -116,7 +116,7 @@
         <button type="button" class="btn btn-sm btn-dark w-100 active g-time" onclick="check(this,'g-time'); draw_map(); $('#days')[0].setAttribute('value',-1); load_chart()">total</button>
         <button type="button" class="btn btn-sm btn-dark w-100 g-time" onclick="check(this,'g-time'); draw_map(); $('#days')[0].setAttribute('value',28); load_chart()">28 days</button>
         <button type="button" class="btn btn-sm btn-dark w-100 g-time" onclick="check(this,'g-time'); draw_map(); $('#days')[0].setAttribute('value',7); load_chart()">7 days</button>
-        <button type="button" class="btn btn-sm btn-dark w-100 active g-type" onclick="check(this,'g-type')">infectious</button>
+        <button type="button" class="btn btn-sm btn-dark w-100 active g-type" onclick="check(this,'g-type')">confirmed</button>
         <button type="button" class="btn btn-sm btn-dark w-100 g-type" onclick="check(this,'g-type')">first dose</button>
       </div>
     </div>
@@ -273,17 +273,20 @@
 
   function load_summary(){
     summary = {{ summary|tojson }};
+    population = {{ population|tojson }};
     i = Number(summary[_district]['I']['Total']).toLocaleString()
     r = Number(summary[_district]['R']['Total']).toLocaleString()
     d = Number(summary[_district]['D']['Total']).toLocaleString()
     v = Number(summary[_district]['V']['Total']).toLocaleString()
     c = _district == 'hcm' ? Number(summary[_district]['C']['Total']).toLocaleString() : '-'
+    p = Number(population[_district]).toLocaleString()
 
     $("#total_infectious_toggle h6").text(i)
     $("#vaccinated_toggle h6").text(v)
     $("#recovered_toggle h6").text(r)
     $("#deceased_toggle h6").text(d)
     $("#critical_toggle h6").text(c)
+    $("#population_toggle h6").text(p)
   }
 
   function resetZoom(x)
