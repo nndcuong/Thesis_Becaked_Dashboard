@@ -30,12 +30,12 @@ function showInfo(ui, centre, label, data) {
     var arr_I = data['I']['real']
     var sum_I = arr_I.reduce((acc,ele)=>acc+ele,0)
 
-    // var arr_V = data['V']['real']
-    // var sum_V = arr_V.reduce((acc,ele)=>acc+ele,0)
+    var arr_V = data['V']['real']
+    var sum_V = arr_V.reduce((acc,ele)=>acc+ele,0)
 
     text = '<div style="font-weight: bold">'+label+'</div>'
     text += '<div> Confirmed cases: '+sum_I+'</div>'
-    // text += '<div> First dose: '+sum_V+'</div>'
+    text += '<div> First dose: '+sum_V+'</div>'
     bubble = new H.ui.InfoBubble({ lat: centre[0], lng: centre[1] }, {
         content: text
     });
@@ -52,7 +52,7 @@ var circles = []
 function addCircleToMap(map, ui, centre, label, data, type, color1, color2) {
     var arr = data[type]['real']
     var sum = arr.reduce((acc,ele)=>acc+ele,0)
-    var r = Math.sqrt(sum/ 3.14) * 60
+    var r = Math.sqrt(sum/ 3.14) * 50
     var circle = new H.map.Circle(
         // The central point of the circle
         { lat: centre[0], lng: centre[1] },
