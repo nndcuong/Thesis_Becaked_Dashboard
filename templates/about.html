@@ -6,8 +6,8 @@
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
-  <h1 style="color: #283592;" align="center">An explainable artificial intelligence model to forecast Covid-19
-    for Ho Chi Minh City</h1>
+  <h1 style="color: #283592;" align="center">An explainable artificial intelligence model to forecast Covid-19</h1>
+  <h1 style="color: #283592;" align="center">for Ho Chi Minh City</h1>
   <i class="fa fa-letter"></i>
   <p align="center">
     Cuong Nguyen<sup>(1, <i class="far fa-envelope"></i>)</sup>, Minh Nguyen<sup>(1)</sup>,
@@ -18,7 +18,7 @@
   <p align="center"><sup>(2)</sup> Hanoi University of Science</p>
   <p align="center" style="font-family: 'Courier New', monospace;"><sup>(1)</sup> {cuong.nguyen1605,
     minh.nguyenhuynh.2257, duc.nguyenquang, ntthinh, nakhuong, ltchon, qttho}@hcmut.edu.vn</p>
-  <p align="center" style="font-family: 'Courier New', monospace;"><sup>(2)</sup> ducquangng.03@gmail.com</p>
+  <p align="center" style="font-family: 'Courier New', monospace;"><sup>(2)</sup> duc.nq204876@sis.hust.edu.vn</p>
   <p align="center">October 27th, 2021</p>
 
   <p style="font-size:20px" align="center"><b>ABSTRACT</b></p>
@@ -233,5 +233,63 @@
             </tbody>
         </table>
     </div>
+    <div class="container-fluid" align="center">
+      <img src="{{ url_for('static', filename='images/predicted_infectious.png') }}" width="900">
+      <p><b>Figure 3</b>: Prediction of daily infections</p>
+    </div>
+    <div class="container-fluid" align="center">
+      <img src="{{ url_for('static', filename='images/predicted_deceased.png') }}" width="900">
+      <p><b>Figure 4</b>: Prediction of total deceased</p>
+    </div>
+    <div class="container-fluid" align="center">
+      <img src="{{ url_for('static', filename='images/predicted_critical.png') }}" width="900">
+      <p><b>Figure 5</b>: Prediction of total critical</p>
+    </div>
+
+    <p style="font-size:22px" align="left"><b>3.2 Analysis of explainability of our model</b></p>
+    <p align="justify">
+      As previously mentioned, our model can serve not only as a regression system with good fit curves for compartments of epidemic model (i.e Infected, 
+      Exposed, etc.), but also as a analytical system to generate the parameters of the epidemic model (i.e \(\beta,\zeta,\mu\), etc.) with an explanation 
+      of the regressed value at the same time. 
+    </p>
+    <p align="justify">
+      More details, our encoder can infer the relationship between the sequence of compartments in the last 10 days and the parameters of the epidemic model, 
+      then the decoder is a differential equations solver that takes the compartments in the past and these parameters as the input to return the values of the compartments in next day.
+    </p>
+
+    <p style="font-size:30px" align="left"><b>References</b></p>
+    <p align="justify" id="ref1">
+      [1] Nguyen, D., Vo, N., Nguyen, T., Nguyen, K., Nguyen, Q., Tran, D., & Quan, T. (2021). BeCaked: An Explainable Artificial Intelligence Model For COVID-19 Forecasting.
+    </p>
+    <p align="justify" id="ref2">
+      [2] Sesti, N., Garau-Luis, J. J., Crawley, E., & Cameron, B. (2021). Integrating LSTMs and GNNs for COVID-19 Forecasting.
+    </p>
+    <p align="justify" id="ref3">
+      [3] Carpenter, M., Luo, C., & Wang, X. (2021). The effects of regularisation on RNN models for time series forecasting: Covid-19 as an example.
+    </p>
+    <p align="justify" id="ref4">
+      [4] Jin, X., Wang, Y. X., & Yan, X. (2021). Inter-Series Attention Model for COVID-19 Forecasting. In <i>Proceedings of the 2021 SIAM International Conference on Data Mining</i> (SDM) (pp. 495-503). Society for Industrial and Applied Mathematics.
+    </p>
+    <p align="justify" id="ref5">
+      [5] Bertozzi, A. L., Franco, E., Mohler, G., Short, M. B., & Sledge, D. (2020). The challenges of modeling and forecasting the spread of COVID-19. <i>Proceedings of the National Academy of Sciences, 117</i>(29), 16732-16738.      
+    </p>
+    <p align="justify" id="ref6">
+      [6] Moein, S., Nickaeen, N., Roointan, A., Borhani, N., Heidary, Z., Javanmard, S. H., ... & Gheisari, Y. (2021). Inefficiency of SIR models in forecasting COVID-19 epidemic: a case study of Isfahan. <i>Scientific Reports, 11</i>(1), 1-9.
+    </p>
+    <p align="justify" id="ref7">
+      [7] Chatterjee, S., Sarkar, A., Chatterjee, S., Karmakar, M., & Paul, R. (2021). Studying the progress of COVID-19 outbreak in India using SIRD model. <i>Indian Journal of Physics, 95</i>(9), 1941-1957.
+    </p>
+    <p align="justify" id="ref8">
+      [8] Harko, T., Lobo, F. S., & Mak, M. K. (2014). Exact analytical solutions of the Susceptible-Infected-Recovered (SIR) epidemic model and of the SIR model with equal death and birth rates. <i>Applied Mathematics and Computation</i>, 236, 184-194.
+    </p>
+    <p align="justify" id="ref9">
+      [9] Ioannidis, J. P., Cripps, S., & Tanner, M. A. (2020). Forecasting for COVID-19 has failed. <i>International journal of forecasting</i>.
+    </p>
+    <p align="justify" id="ref10">
+      [10] Kaur, J., Chattopadhyay, P., Singh, L., Chattopadhyay, K., & Mishra, N. (2021). Machine Learning Based Prediction and Impact Analysis of Various Lockdown Stages of COVID-19 Outbreak–A Case Study of India. <i>Journal of Graphic Era University</i>, 121-136.
+    </p>
+    <p align="justify" id="ref11">
+      [11] Ngo, H. A., Nguyen, T.-K., Nguyen, T.-A. (2021, October). A novel compartment model for analyzing and predicting Covid-19 outbreaks in Vietnam. <i>Oral presentation at the 52nd Union World Conference on Lung Health.</i>
+    </p>
 </div>
 {% endblock %}
