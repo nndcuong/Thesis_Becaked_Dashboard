@@ -179,7 +179,7 @@ def predict():
 
 @app.route("/whitepaper", methods=["GET"])
 def whitepaper():
-    return render_template('whitepaper.html',
+    return render_template('about.html',
                             name='whitepaper')
 
 @app.route("/donate", methods=["GET"])

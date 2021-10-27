@@ -62,7 +62,7 @@
           {% else %}
           <li class="nav-item">
           {% endif %}
-            <a class="nav-link" href="{{ url_for('whitepaper') }}">White paper</a>
+            <a class="nav-link" href="{{ url_for('whitepaper') }}">About</a>
           </li>
           {% if name == 'donate'%}
           <!-- <li class="nav-item active"> -->
@@ -76,7 +76,7 @@
           {% else %}
           <li class="nav-item">
           {% endif %}
-            <a class="nav-link" href="{{ url_for('achievements') }}">Milestones</a>
+            <a class="nav-link" href="{{ url_for('achievements') }}">Timeline</a>
           </li>
           {% if name == 'acknowledgement'%}
           <li class="nav-item active">
@@ -97,7 +97,11 @@
     </nav>
   </header>
 
+  {% if name == 'HCM'%}
+  <div class="container-fluid hcm-homepage">
+  {% else %}
   <div class="container-fluid">
+  {% endif %}
     {% block content %}{% endblock %}
   </div>
 

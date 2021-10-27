@@ -20,7 +20,7 @@
   background-color: #26334f !important;
 }
 
-.container-fluid{
+.hcm-homepage.container-fluid, .hcm-homepage .container-fluid{
   padding: 0 !important;
 }
 

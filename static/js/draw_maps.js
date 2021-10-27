@@ -34,8 +34,8 @@ function showInfo(ui, centre, label, data) {
     var sum_V = arr_V.reduce((acc,ele)=>acc+ele,0)
 
     text = '<div style="font-weight: bold">'+label+'</div>'
-    text += '<div> Confirmed cases: '+sum_I+'</div>'
-    text += '<div> First dose: '+sum_V+'</div>'
+    text += '<div> Confirmed cases: '+sum_I.toLocaleString()+'</div>'
+    text += '<div> First dose: '+sum_V.toLocaleString()+'</div>'
     bubble = new H.ui.InfoBubble({ lat: centre[0], lng: centre[1] }, {
         content: text
     });
