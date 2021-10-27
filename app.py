@@ -177,7 +177,7 @@ def predict():
                             num_day=len(data_series[0]),
                             date_series=date_series)
 
-@app.route("/whitepaper", methods=["GET"])
+@app.route("/about", methods=["GET"])
 def whitepaper():
     return render_template('about.html',
                             name='whitepaper')
