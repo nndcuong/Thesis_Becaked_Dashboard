@@ -25,8 +25,9 @@ def reload():
             return "done"
         else:
             return "invalid token"
-    except:
-        return "invalid token"
+    except Exception as e:
+        print(e)
+        return str(e)
 
 @app.route("/hello", methods=["GET"])
 @app.route('/hello/<name>', methods=["GET"])
