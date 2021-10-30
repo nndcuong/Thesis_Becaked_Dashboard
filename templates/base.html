@@ -97,31 +97,20 @@
     </nav>
   </header>
 
-  {% if name == 'HCM'%}
-  <div class="container-fluid hcm-homepage">
-  {% else %}
+  {% if name != 'HCM'%}
   <div class="container-fluid">
   {% endif %}
-    {% block content %}{% endblock %}
-  </div>
 
-  {% if name == 'HCM'%}
-  <footer class="page-footer font-small blue hcm-homepage">
-  {% else %}
+    {% block content %}{% endblock %}
+
+  {% if name != 'HCM'%}
+  </div>
+  {% endif %}
+
   <hr>
   <footer class="page-footer font-small blue">
-  {% endif %}
-    <div class="row" style="margin: 0">
-      <div class="col-4" align="left" style="padding-left: 1em;">
-        {% block lastupdate %}{% endblock %}
-      </div>
-      <div class="col-4" align="center" style="padding-left: 1em;">
-        <div class="footer-copyright text-center py-3">
-        Copyright &copy 2020 BeCaked. All rights reserved.
-        </div>
-      </div>
-      <div class="col-4" align="center" style="padding-left: 1em;"></div>
-    </div>
+    <div class="footer-copyright text-center py-3">
+      Copyright &copy 2020 BeCaked. All rights reserved.
     </div>
   </footer>
 </body>
