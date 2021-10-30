@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href = "../static/css/login.css">
+        <style>
+            #message{
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+                background: #4682B4;
+                border-radius: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id = "container">
+            <form action = "/login" method = "post">
+                <div class = "form-group">
+                    <input type = "text" id = "username" name = "username" placeholder = "Username" required>
+                </div>
+                <div class = "form-group">
+                    <input type = "password" id = "password" name = "password" placeholder = "Password" required>
+                </div>
+                <div class = "form-group">
+                    <button type = "submit">Sign In</button>
+                </div>
+                {% if message %}
+                <div class = "form-group">
+                    <p id = "message">{{message}}</p>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </body>
+</html>
