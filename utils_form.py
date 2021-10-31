@@ -15,8 +15,10 @@ def process_form_1(df):
     result['critical'] = {'invasive-ventilation': int(a), 'emo': int(b)}
     result['death'] = int(c)
     result['F0'] = {'home': df.loc[7, 1], 'quarantine': df.loc[8, 1]}
+    a, b = df.loc[9, 1].split('+')
+    result['new-vaccine'] = {'first-dose': int(a), 'second-dose': int(b)}
     a, b = df.loc[10, 1].split('+')
-    result['vaccine'] = {'new-in-day': df.loc[9, 1], 'first-dose': int(a), 'second-dose': int(b)}
+    result['total-vaccine'] = {'first-dose': int(a), 'second-dose': int(b)}
     return result
 def process_form_2(df):
     assert df.shape == (9, 4)
