@@ -5,6 +5,25 @@
     <title>Insert new data</title>
     <link rel="stylesheet" href="../static/css/insert_data.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .msg-form {
+            text-align: center;
+            font-size: 18px;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #f00;
+            /* background-color: #1E90FF; */
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .msg-form p {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         function read_file_1(input) {
@@ -12,12 +31,13 @@
 
                 var reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     $("#wrap-file-1").css("box-shadow", "unset");
                     $("#wrap-file-1 div.header").hide();
                     $("#file-form-1 .file-upload-input").hide();
                     $("#file-form-1 button").show();
                     $("#wrap-file-1 .file-title-wrap").show();
+                    $("#msg-form-1 > p").html("")
                     $('#wrap-file-1 .file-title').html(input.files[0].name);
 
                 };
@@ -32,12 +52,13 @@
 
                 var reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     $("#wrap-file-2").css("box-shadow", "unset");
                     $("#wrap-file-2 div.header").hide();
                     $("#file-form-2 .file-upload-input").hide();
                     $("#file-form-2 button").show();
                     $("#wrap-file-2 .file-title-wrap").show();
+                    $("#msg-form-2 > p").html("")
                     $('#wrap-file-2 .file-title').html(input.files[0].name);
 
                 };
@@ -47,20 +68,52 @@
                 removeUpload();
             }
         }
-        function remove_upload_1(){
+        function read_file_3(input) {
+            if (input.files && input.files[0]) {
+
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $("#wrap-file-3").css("box-shadow", "unset");
+                    $("#wrap-file-3 div.header").hide();
+                    $("#file-form-3 .file-upload-input").hide();
+                    $("#file-form-3 button").show();
+                    $("#wrap-file-3 .file-title-wrap").show();
+                    $("#msg-form-3 > p").html("")
+                    $('#wrap-file-3 .file-title').html(input.files[0].name);
+
+                };
+                reader.readAsDataURL(input.files[0]);
+
+            } else {
+                removeUpload();
+            }
+        }
+        function remove_upload_1() {
             $("#wrap-file-1").css("box-shadow", " 0 0 5px rgba(0,0,0,.3)");
             $("#wrap-file-1 div.header").show();
             $("#file-form-1 .file-upload-input").show();
             $("#file-form-1 button").hide();
             $("#wrap-file-1 .file-title-wrap").hide();
+            $("#msg-form-1 > p").html("")
         }
-        function remove_upload_2(){
+        function remove_upload_2() {
             $("#wrap-file-2").css("box-shadow", " 0 0 5px rgba(0,0,0,.3)");
             $("#wrap-file-2 div.header").show();
             $("#file-form-2 .file-upload-input").show();
             $("#file-form-2 button").hide();
             $("#wrap-file-2 .file-title-wrap").hide();
+            $("#msg-form-2 > p").html("")
         }
+        function remove_upload_3() {
+            $("#wrap-file-3").css("box-shadow", " 0 0 5px rgba(0,0,0,.3)");
+            $("#wrap-file-3 div.header").show();
+            $("#file-form-3 .file-upload-input").show();
+            $("#file-form-3 button").hide();
+            $("#wrap-file-3 .file-title-wrap").hide();
+            $("#msg-form-3 > p").html("")
+        }
+    
         function showForm() {
             if ($("#tab-1:checked").val() !== undefined) {
                 $(".wrap-form-2").hide()
@@ -81,30 +134,30 @@
                 window.location.href = "/"
             }
         }
-        function switchInput1Method(){
+        function switchInput1Method() {
             if ($("#user-input-1:checked").val() !== undefined) {
                 $("#wrap-file-1").hide()
-                $("#daily-summary").show() 
+                $("#daily-summary").show()
             }
             else if ($("#file-upload-1:checked").val() !== undefined) {
                 $("#daily-summary").hide()
                 $("#wrap-file-1").show()
             }
         }
-        function switchInput2Method(){
+        function switchInput2Method() {
             if ($("#user-input-2:checked").val() !== undefined) {
                 $("#wrap-file-2").hide()
-                $("#daily-new").show() 
+                $("#daily-new").show()
             }
             else if ($("#file-upload-2:checked").val() !== undefined) {
                 $("#daily-new").hide()
                 $("#wrap-file-2").show()
             }
         }
-        function switchInput3Method(){
+        function switchInput3Method() {
             if ($("#user-input-3:checked").val() !== undefined) {
                 $("#wrap-file-3").hide()
-                $("#daily-treatment").show() 
+                $("#daily-treatment").show()
             }
             else if ($("#file-upload-3:checked").val() !== undefined) {
                 $("#daily-treatment").hide()
@@ -123,21 +176,27 @@
                 for="tab-2" class="tab">Mẫu 2</label>
             <input id="tab-3" name="tab" class="form-3" type="radio" value="form-3" onchange="showForm()"><label
                 for="tab-3" class="tab">Mẫu 3</label>
-            <input id="tab-4" name="tab" class="return-home" type="radio" onchange="showForm()"><label
-                for="tab-4" class="tab">Trang chủ</label>
+            <input id="tab-4" name="tab" class="return-home" type="radio" onchange="showForm()"><label for="tab-4"
+                class="tab">Trang chủ</label>
         </div>
         <div class="wrap-form-1">
             <div class="left">
                 <p>Bảng tổng kết <br>dịch bệnh</p>
-                <input id="file-upload-1" name="input1-method" type="radio" class="file-upload"  onchange="switchInput1Method()" checked><label
-                for="file-upload-1">Tải tệp</label>
-                <input id="user-input-1" name="input1-method" type="radio" class="user-input"  onchange="switchInput1Method()" ><label
-                    for="user-input-1">Nhập</label>
-               
+                <input id="file-upload-1" name="input1-method" type="radio" class="file-upload"
+                    onchange="switchInput1Method()" checked><label for="file-upload-1">Tải tệp</label>
+                <input id="user-input-1" name="input1-method" type="radio" class="user-input"
+                    onchange="switchInput1Method()"><label for="user-input-1">Nhập</label>
+
             </div>
             <div class="right">
-                <div id = "daily-summary">
+                <div id="daily-summary">
                     <form>
+                        <div class="group">
+                            <div class="pair">
+                                <label for="date-summary">Ngày</label>
+                                <input type="text" id="date-summary" name="date-summary" placeholder = "30/10/2021">
+                            </div>
+                        </div>
                         <div class="group">
                             <div class="pair">
                                 <label for="new-pcr">Số ca PCR mới</label>
@@ -221,22 +280,29 @@
                         <div class="group">
                             <button type="submit">Gửi</button>
                         </div>
-    
+
                     </form>
                 </div>
-               
-                <div class="wrapper-file-upload" id = "wrap-file-1">
+                <div id="msg-form-1" class="msg-form">
+                    <p>
+                    </p>
+                </div>
+                <div class="wrapper-file-upload" id="wrap-file-1">
+
                     <div class="header">
-                        <p><i class="fa fa-cloud-upload fa-2x"></i><span><span>up</span>load</span></p>			
+                        <p><i class="fa fa-cloud-upload fa-2x"></i><span><span>up</span>load</span></p>
                     </div>
-                    <form class = "form-group" id = "file-form-1">
+                    <form class="form-group" id="file-form-1" action='/upload-form-1' method='post'
+                        enctype="multipart/form-data">
                         <div class="file-upload-input">
-                            <input type="file" id="file-input-1" onchange = "read_file_1(this);" accept=".xlsx, .xls, .csv">
+                            <input type="file" id="file-input-1" name='file' onchange="read_file_1(this);"
+                                accept=".xlsx">
                             <label for="file-input-1">
                                 <i class="fa fa-file-text-o fa-3x"></i>
                                 <p>
-                                    <strong>Drag and drop</strong> files here<br>
-                                    or <span>browse</span> to begin the upload
+                                    <!-- <strong>Drag and drop</strong> files here<br> -->
+                                    <!-- or -->
+                                    <span>browse</span> to begin the upload
                                 </p>
                             </label>
                         </div>
@@ -244,29 +310,37 @@
                             <div>
                                 <i class="fa fa-file-text-o fa-3x"><span class="file-title"></span></i>
                             </div>
-                            <button type="submit" onclick="upload()" class="upload-file">Upload</button>
+                            <button type="submit" class="upload-file">Upload</button>
                             <button type="button" onclick="remove_upload_1()" class="remove-file">Remove</button>
                         </div>
                     </form>
-                    <div class = "template-format-file">
-                        <p><i>Template file: </i> <a href = "{{ url_for('static', filename='template_files/template-form-1.xlsx') }}" download> here</a></p>
+                    <div class="template-format-file">
+                        <p><i>Template file: </i> <a
+                                href="{{ url_for('static', filename='template_files/template-form-1.xlsx') }}" download>
+                                here</a></p>
                     </div>
                 </div>
-              
+
             </div>
         </div>
         <div class="wrap-form-2">
             <div class="left">
                 <p>Số ca <br>nhiễm mới</p>
-                <input id="file-upload-2" name="input2-method" type="radio" class="file-upload" onchange="switchInput2Method()" checked><label
-                    for="file-upload-2">Tải tệp</label>
-                <input id="user-input-2" name="input2-method" type="radio" class="user-input" onchange="switchInput2Method()"><label
-                    for="user-input-2">Nhập</label>
-               
+                <input id="file-upload-2" name="input2-method" type="radio" class="file-upload"
+                    onchange="switchInput2Method()" checked><label for="file-upload-2">Tải tệp</label>
+                <input id="user-input-2" name="input2-method" type="radio" class="user-input"
+                    onchange="switchInput2Method()"><label for="user-input-2">Nhập</label>
+
             </div>
             <div class="right">
                 <div id="daily-new">
                     <form>
+                        <div class="group">
+                            <div class="pair">
+                                <label for="date-new">Ngày</label>
+                                <input type="text" id="date-new" name="date-new" placeholder = "30/10/2021">
+                            </div>
+                        </div>
                         <div class="group">
                             <div class="pair">
                                 <label for="f0-pcr-hospital">Số F0 PCR tại bệnh viện</label>
@@ -338,18 +412,25 @@
 
                     </form>
                 </div>
-                <div class="wrapper-file-upload" id = "wrap-file-2">
+                <div id="msg-form-2" class="msg-form">
+                    <p>
+                    </p>
+                </div>
+                <div class="wrapper-file-upload" id="wrap-file-2">
                     <div class="header">
-                        <p><i class="fa fa-cloud-upload fa-2x"></i><span><span>up</span>load</span></p>			
+                        <p><i class="fa fa-cloud-upload fa-2x"></i><span><span>up</span>load</span></p>
                     </div>
-                    <form class = "form-group" id = "file-form-2">
-                        <div class="file-upload-input">
-                            <input type="file" id="file-input-2" onchange = "read_file_2(this);" accept=".xlsx, .xls, .csv">
+                    <form action='/upload-form-2' method='post'
+                    enctype="multipart/form-data" class="form-group" id="file-form-2">
+                        <div class="file-upload-input" >
+                            <input name = 'file' type="file" id="file-input-2" onchange="read_file_2(this);"
+                                accept=".xlsx">
                             <label for="file-input-2">
                                 <i class="fa fa-file-text-o fa-3x"></i>
                                 <p>
-                                    <strong>Drag and drop</strong> files here<br>
-                                    or <span>browse</span> to begin the upload
+                                    <!-- <strong>Drag and drop</strong> files here<br> -->
+                                    <!-- or  -->
+                                    <span>browse</span> to begin the upload
                                 </p>
                             </label>
                         </div>
@@ -361,38 +442,47 @@
                             <button type="button" onclick="remove_upload_2()" class="remove-file">Remove</button>
                         </div>
                     </form>
-                    <div class = "template-format-file">
-                        <p><i>Template file: </i> <a href = "{{ url_for('static', filename='template_files/template-form-2.xlsx') }}" download> here</a></p>
+                    <div class="template-format-file">
+                        <p><i>Template file: </i> <a
+                                href="{{ url_for('static', filename='template_files/template-form-2.xlsx') }}" download>
+                                here</a></p>
                     </div>
                 </div>
-               
+
             </div>
         </div>
         <div class="wrap-form-3">
             <div class="left">
                 <p>Tình hình <br>điều trị</p>
-                <input id="file-upload-3" name="input3-method" type="radio" class="file-upload" onchange="switchInput3Method()" checked><label
-                    for="file-upload-3">Tải tệp</label>
-                <input id="user-input-3" name="input3-method" type="radio" class="user-input" onchange="switchInput3Method()"><label
-                    for="user-input-3">Nhập</label>
-               
+                <input id="file-upload-3" name="input3-method" type="radio" class="file-upload"
+                    onchange="switchInput3Method()" checked><label for="file-upload-3">Tải tệp</label>
+                <input id="user-input-3" name="input3-method" type="radio" class="user-input"
+                    onchange="switchInput3Method()"><label for="user-input-3">Nhập</label>
+
             </div>
             <div class="right">
                 <div id="daily-treatment">
-                  
+
                 </div>
-                <div class="wrapper-file-upload" id = "wrap-file-3">
+                <div id="msg-form-3" class="msg-form">
+                    <p>                               
+                    </p>
+                </div>
+                <div class="wrapper-file-upload" id="wrap-file-3">
                     <div class="header">
-                        <p><i class="fa fa-cloud-upload fa-2x"></i><span><span>up</span>load</span></p>			
+                        <p><i class="fa fa-cloud-upload fa-2x"></i><span><span>up</span>load</span></p>
                     </div>
-                    <form class = "form-group" id = "file-form-3">
+                    <form action='/upload-form-3' method='post'
+                    enctype="multipart/form-data" class="form-group" id="file-form-3">
                         <div class="file-upload-input">
-                            <input type="file" id="file-input-3" onchange = "read_file_3(this);" accept=".xlsx, .xls, .csv">
-                            <label for="file-input-2">
+                            <input name = 'file' type="file" id="file-input-3" onchange="read_file_3(this);"
+                                accept=".xlsx">
+                            <label for="file-input-3">
                                 <i class="fa fa-file-text-o fa-3x"></i>
                                 <p>
-                                    <strong>Drag and drop</strong> files here<br>
-                                    or <span>browse</span> to begin the upload
+                                    <!-- <strong>Drag and drop</strong> files here<br> -->
+                                    <!-- or -->
+                                     <span>browse</span> to begin the upload
                                 </p>
                             </label>
                         </div>
@@ -400,20 +490,22 @@
                             <div>
                                 <i class="fa fa-file-text-o fa-3x"><span class="file-title"></span></i>
                             </div>
-                            <button type="submit" onclick="upload()" class="upload-file">Upload</button>
+                            <button type="submit" class="upload-file">Upload</button>
                             <button type="button" onclick="remove_upload_3()" class="remove-file">Remove</button>
                         </div>
                     </form>
-                    <div class = "template-format-file">
-                        <p><i>Template file: </i> <a href = "{{ url_for('static', filename='template_files/template-form-3.xlsx') }}" download> here</a></p>
+                    <div class="template-format-file">
+                        <p><i>Template file: </i> <a
+                                href="{{ url_for('static', filename='template_files/template-form-3.xlsx') }}" download>
+                                here</a></p>
                     </div>
                 </div>
-               
+
             </div>
         </div>
 
     </div>
-
+    <script src = "../static/js/insert_data.js"></script>
 </body>
 
 </html>

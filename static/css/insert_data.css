@@ -24,14 +24,14 @@ body {
 
 .wrap-form-1 {
     background-color: #fff;
-    height: 600px;
+    height: 700px;
     width: 1400px;
     overflow: auto;
 }
 
 .wrap-form-2 {
     background-color: #fff;
-    height: 450px;
+    height: 600px;
     width: 1400px;
     overflow: auto;
 }
@@ -122,7 +122,7 @@ body {
     margin-bottom: 30px;
 }
 
-input[type="number"] {
+.pair input[type = "text"], input[type="number"] {
     font-size: 15px;
     line-height: 2;
     display: block;
@@ -133,9 +133,10 @@ input[type="number"] {
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
 
-input[type="number"]:focus {
+.pair input[type = "text"]:focus, input[type="number"]:focus {
     outline: 2px solid #f00;
 }
+
 
 button {
     height: 50px;
@@ -253,4 +254,10 @@ input + label{
 }
 .file-title-wrap span{
     font-size: 14px;
+}
+button[type='button']{
+    margin-left: 40px;
+}
+button[type='button']:hover{
+    background: red;
 }

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, url_for, send_from_directory
-from flask import render_template, session, redirect
+from flask import render_template, session, redirect, flash
 from flask.helpers import make_response
 from markupsafe import escape
 import os
@@ -12,9 +12,11 @@ import json
 import hashlib
 from functools import wraps
 from dotenv import load_dotenv
+import pandas as pd
 
 from database import decode_auth_token, get_latest_data, get_daily_latest_statistics, check, is_valid_account, encode_auth_token
 from utils import *
+from utils_form import *
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -49,12 +51,48 @@ def login():
         else:
             return render_template('login.html', message = message)
     elif request.method == 'GET':
-        return render_template('login.html', message = None)
+        if 'is-logged-in' not in session or session['is-logged-in'] is False:
+            return render_template('login.html', message = None)
+        return redirect('/insert-data')
 
 @app.route('/insert-data')
 @login_required
 def insert_data(username):
     return render_template('insert_data.html')
+
+@app.route('/upload-form-1', methods = ['GET', 'POST'])
+def upload_form_1():
+    if request.method == 'POST':
+        f = request.files['file']
+        df = pd.read_excel(f.read(), header = None)
+        try:
+            data = process_form_1(df)
+            return make_response("", 200)
+        except:
+            return make_response("", 400)
+
+@app.route('/upload-form-2', methods = ['GET', 'POST'])
+def upload_form_2():
+    if request.method == 'POST':
+        f = request.files['file']
+        df = pd.read_excel(f.read(), header = None)
+        try:
+            data = process_form_2(df)
+            return make_response("", 200)
+        except:
+            return make_response("", 400)
+                
+@app.route('/upload-form-3', methods = ['GET', 'POST'])
+def upload_form_3():
+    if request.method == 'POST':
+        f = request.files['file']
+        df = pd.read_excel(f.read(), header = None)
+        try:
+            data = process_form_3(df)
+            return make_response("", 200)
+        except:
+            return make_response("", 400)
+                
 
 @app.route('/reload-db', methods=["POST"])
 def reload():
@@ -368,5 +406,5 @@ def main():
 
 if __name__ == "__main__":
     app = main()
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get("PORT", 8081))
     app.run(debug=True, host='0.0.0.0', port=port)
