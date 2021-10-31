@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, url_for, send_from_directory
-from flask import render_template
+from flask import render_template, session, redirect
 from flask.helpers import make_response
 from markupsafe import escape
 import os
@@ -10,11 +10,51 @@ import time
 import numpy as np
 import json
 import hashlib
+from functools import wraps
+from dotenv import load_dotenv
 
-from database import get_latest_data, get_daily_latest_statistics, check
+from database import decode_auth_token, get_latest_data, get_daily_latest_statistics, check, is_valid_account, encode_auth_token
 from utils import *
 
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(hours = 1)
+
+def login_required(fn):
+    @wraps(fn)
+    def decorator(*args, **kwargs):
+        if 'is-logged-in' not in session or session['is-logged-in'] is False:
+            return redirect('/login')
+        auth_token = session['auth-token']
+        flag, msg = decode_auth_token(app.secret_key, auth_token)
+        if flag:
+            return fn(msg, *args, **kwargs)
+        else:
+            return redirect('/login')
+    return decorator
+
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = hashlib.sha256(request.form['password'].encode()).hexdigest()
+        flag, message = is_valid_account(username, password)
+        if flag:
+            session['is-logged-in'] = True
+            session['auth-token'] = encode_auth_token(app.secret_key, username)
+            return redirect(url_for('insert_data'))
+        else:
+            return render_template('login.html', message = message)
+    elif request.method == 'GET':
+        return render_template('login.html', message = None)
+
+@app.route('/insert-data')
+@login_required
+def insert_data(username):
+    return render_template('insert_data.html')
 
 @app.route('/reload-db', methods=["POST"])
 def reload():
