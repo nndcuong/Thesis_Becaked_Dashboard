@@ -61,76 +61,76 @@
           <div class="col-lg-6 col-sm-12 text-center">
             <div class="txt-1">CA MỚI</div>
             <div class="txt-2">(PCR + TEST)</div>
-            <div class="num-1">1,042 + 682</div>
+            <div class="num-1">{{ "{:,}".format(form_1['new-infections']['pcr']) }} + {{ "{:,}".format(form_1['new-infections']['rapid-test']) }}</div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center">
             <div class="txt-1">TỔNG SỐ CA</div>
             <div class="txt-2">(ĐỢT 4)</div>
-            <div class="num-1">426,378</div>
+            <div class="num-1">{{ "{:,}".format(form_1['total-cases']) }}</div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center" onmouseover="$('#xuatvien-popup').show()" onmouseout="$('#xuatvien-popup').hide()">
             <div class="txt-1">XUẤT VIỆN</div>
-            <div class="num-1">251,113</div>
-            <div class="num-2">+846</div>
+            <div class="num-1">{{ "{:,}".format(form_1['total-recovered']['hospital']) }}</div>
+            <div class="num-2">+{{ "{:,}".format(form_1['recovered']['hospital']) }}</div>
             <div class="info-popup" id="xuatvien-popup">
-              Hôm nay có 846 ca mới, tổng đợt 4 có 251,113 ca
+              Hôm nay có {{ "{:,}".format(form_1['recovered']['hospital']) }} ca mới, tổng đợt 4 có {{ "{:,}".format(form_1['total-recovered']['hospital']) }} ca
             </div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center" onmouseover="$('#kcl-popup').show()" onmouseout="$('#kcl-popup').hide()">
             <div class="txt-1">HỒI PHỤC KCL</div>
-            <div class="num-1">111,385</div>
-            <div class="num-2">+894</div>
+            <div class="num-1">{{ "{:,}".format(form_1['total-recovered']['quarantine']) }}</div>
+            <div class="num-2">+{{ "{:,}".format(form_1['recovered']['quarantine']) }}</div>
             <div class="info-popup" id="kcl-popup">
-              Hôm nay có 894 ca mới, tổng đợt 4 có 111,385 ca
+              Hôm nay có {{ "{:,}".format(form_1['recovered']['quarantine']) }} ca mới, tổng đợt 4 có {{ "{:,}".format(form_1['total-recovered']['quarantine']) }} ca
             </div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center" onmouseover="$('#dieutri-popup').show()" onmouseout="$('#dieutri-popup').hide()">
             <div class="txt-1">ĐIỀU TRỊ</div>
-            <div class="num-1">11,359</div>
-            <div class="num-2">+982</div>
+            <div class="num-1">{{ "{:,}".format(form_1['treatment']['current']) }}</div>
+            <div class="num-2">+{{ "{:,}".format(form_1['treatment']['new-hospital']) }}</div>
             <div class="info-popup" id="dieutri-popup">
-              Hôm nay nhập viện thêm 982 ca, hiện đang điều trị 11,359 ca
+              Hôm nay nhập viện thêm {{ "{:,}".format(form_1['treatment']['new-hospital']) }} ca, hiện đang điều trị {{ "{:,}".format(form_1['treatment']['current']) }} ca
             </div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center" onmouseover="$('#tuvong-popup').show()" onmouseout="$('#tuvong-popup').hide()">
             <div class="txt-1">TỬ VONG</div>
-            <div class="num-1">16,648</div>
-            <div class="num-2">+30</div>
+            <div class="num-1">{{ "{:,}".format(form_3['data'][15][0]) }}</div>
+            <div class="num-2">+{{ "{:,}".format(form_1['death']) }}</div>
             <div class="info-popup" id="tuvong-popup">
-              Hôm nay có 30 ca mới, tổng đợt 4 có 16,648 ca
+              Hôm nay có {{ "{:,}".format(form_1['death']) }} ca mới, tổng đợt 4 có {{ "{:,}".format(form_3['data'][15][0]) }} ca
             </div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center" onmouseover="$('#mui1-popup').show()" onmouseout="$('#mui1-popup').hide()">
             <div class="txt-1">MŨI 1</div>
-            <div class="num-1">7,380,350</div>
-            <div class="num-2">+131,274</div>
+            <div class="num-1">{{ "{:,}".format(form_1['total-vaccine']['first-dose']) }}</div>
+            <div class="num-2">+{{ "{:,}".format(form_1['new-vaccine']['first-dose']) }}</div>
             <div class="info-popup" id="mui1-popup">
-              Hôm nay tiêm được 131,274 mũi mới, tổng cộng đã tiêm 7,380,350 mũi
+              Hôm nay tiêm được {{ "{:,}".format(form_1['new-vaccine']['first-dose']) }} mũi mới, tổng cộng đã tiêm {{ "{:,}".format(form_1['total-vaccine']['first-dose']) }} mũi
             </div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center" onmouseover="$('#mui2-popup').show()" onmouseout="$('#mui2-popup').hide()">
             <div class="txt-1">MŨI 2</div>
-            <div class="num-1">5,700,451</div>
-            <div class="num-2">+10,541</div>
+            <div class="num-1">{{ "{:,}".format(form_1['total-vaccine']['second-dose']) }}</div>
+            <div class="num-2">+{{ "{:,}".format(form_1['new-vaccine']['second-dose']) }}</div>
             <div class="info-popup" id="mui2-popup">
-              Hôm nay tiêm được 10,541 mũi mới, tổng cộng đã tiêm 5,700,451 mũi
+              Hôm nay tiêm được {{ "{:,}".format(form_1['new-vaccine']['second-dose']) }} mũi mới, tổng cộng đã tiêm {{ "{:,}".format(form_1['total-vaccine']['second-dose']) }} mũi
             </div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center">
             <div class="txt-1">F0 TẠI NHÀ</div>
-            <div class="num-1">21,976</div>
+            <div class="num-1">{{ "{:,}".format(form_1['F0']['home']) }}</div>
           </div>
           <div class="col-lg-6 col-sm-12 text-center">
             <div class="txt-1">F0 KCL</div>
-            <div class="num-1">4,895</div>    
+            <div class="num-1">{{ "{:,}".format(form_1['F0']['quarantine']) }}</div>    
           </div>
           <div class="col-lg-6 col-sm-12 text-center">
             <div class="txt-1">THỞ MÁY XÂM LẤN</div>
-            <div class="num-1">252</div>    
+            <div class="num-1">{{ "{:,}".format(form_1['critical']['invasive-ventilation']) }}</div>    
           </div>
           <div class="col-lg-6 col-sm-12 text-center">
             <div class="txt-1">ECMO</div>
-            <div class="num-1">11</div>    
+            <div class="num-1">{{ "{:,}".format(form_1['critical']['emo']) }}</div>    
           </div>
         </div>
       </div>
@@ -215,7 +215,7 @@
       <div class="text-center" style="padding-bottom: .25em; font-size: 2em;">
         BỆNH VIỆN
       </div>
-      <table class="table table-hover table-responsive text-center" style="height: calc(100vh - 116px - 1em -  6em); overflow-y: scroll;">
+      <table class="table table-hover table-responsive text-center" style="height: calc(100vh - 116px - 1em -  6em - 2em); overflow-y: scroll;">
         <tr style="position: sticky; top: 0; z-index: 1; background-color: #7f8c8d;">
           <th>Phân loại</th>
           <th>Trong ngày</th>
@@ -223,83 +223,83 @@
         </tr>
         <tr>
           <td>Tầng 2</td>
-          <td>9,545</td>
-          <td>+23</td>
+          <td>{{ "{:,}".format(form_3['data'][0][0]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][0][2]>0 else '',form_3['data'][0][2]) }}</td>
         </tr>
         <tr>
           <td>Tầng 3</td>
-          <td>1,814</td>
-          <td>+31</td>
+          <td>{{ "{:,}".format(form_3['data'][1][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][1][2]>0 else '',form_3['data'][1][2]) }}</td>
         </tr>
         <tr style="background-color: yellow; font-weight: 600; font-size: 1.25em;">
           <td>Tổng T.2 + T.3</td>
-          <td>11,359</td>
-          <td>+54</td>
+          <td>{{ "{:,}".format(form_3['data'][2][1]) }}</td>
+          <td style="color: {{'red' if form_3['data'][2][2]>0 else 'green'}};">{{ "{}{:,}".format('+' if form_3['data'][2][2]>0 else '',form_3['data'][2][2]) }}</td>
         </tr>
         <tr>
           <td>Thở nội khí quản</td>
-          <td>252</td>
-          <td>-3</td>
+          <td>{{ "{:,}".format(form_3['data'][3][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][3][2]>0 else '',form_3['data'][3][2]) }}</td>
         </tr>
         <tr>
           <td>trong đó ECMO</td>
-          <td>11</td>
-          <td>-1</td>
+          <td>{{ "{:,}".format(form_3['data'][4][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][4][2]>0 else '',form_3['data'][4][2]) }}</td>
         </tr>
         <tr>
           <td>Thở máy không xâm lấn</td>
-          <td>241</td>
-          <td>+3</td>
+          <td>{{ "{:,}".format(form_3['data'][5][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][5][2]>0 else '',form_3['data'][5][2]) }}</td>
         </tr>
         <tr>
           <td>Thở oxy qua mũi, mask</td>
-          <td>1,293</td>
-          <td>-115</td>
+          <td>{{ "{:,}".format(form_3['data'][6][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][6][2]>0 else '',form_3['data'][6][2]) }}</td>
         </tr>
         <tr style="background-color: yellow; font-weight: 600; font-size: 1.25em;">
           <td>Tổng hỗ trợ hô hấp</td>
-          <td>1,786</td>
-          <td>-115</td>
+          <td>{{ "{:,}".format(form_3['data'][7][1]) }}</td>
+          <td style="color: {{'red' if form_3['data'][7][2]>0 else 'green'}};">{{ "{}{:,}".format('+' if form_3['data'][7][2]>0 else '',form_3['data'][7][2]) }}</td>
         </tr>
         <tr>
           <td>Xuất viện - Trẻ em</td>
-          <td>222</td>
-          <td>145</td>
+          <td>{{ "{:,}".format(form_3['data'][8][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][8][2]>0 else '',form_3['data'][8][2]) }}</td>
         </tr>
         <tr>
           <td>Xuất viện - Phụ nữ mang thai</td>
-          <td>16</td>
-          <td>11</td>
+          <td>{{ "{:,}".format(form_3['data'][9][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][9][2]>0 else '',form_3['data'][9][2]) }}</td>
         </tr>
         <tr>
           <td>Xuất viện - Khác</td>
-          <td>608</td>
-          <td>-28</td>
+          <td>{{ "{:,}".format(form_3['data'][10][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][10][2]>0 else '',form_3['data'][10][2]) }}</td>
         </tr>
         <tr style="background-color: yellow; font-weight: 600; font-size: 1.25em;">
           <td>Tổng xuất viện</td>
-          <td>846</td>
-          <td>+128</td>
+          <td>{{ "{:,}".format(form_3['data'][11][1]) }}</td>
+          <td style="color: {{'red' if form_3['data'][11][2]<0 else 'green'}};">{{ "{}{:,}".format('+' if form_3['data'][11][2]>0 else '',form_3['data'][11][2]) }}</td>
         </tr>
         <tr>
           <td>Tử vong - Trẻ em</td>
-          <td>0</td>
-          <td>0</td>
+          <td>{{ "{:,}".format(form_3['data'][12][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][12][2]>0 else '',form_3['data'][12][2]) }}</td>
         </tr>
         <tr>
           <td>Tử vong - Phụ nữ mang thai</td>
-          <td>0</td>
-          <td>0</td>
+          <td>{{ "{:,}".format(form_3['data'][13][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][13][2]>0 else '',form_3['data'][13][2]) }}</td>
         </tr>
         <tr>
           <td>Tử vong - Khác</td>
-          <td>30</td>
-          <td>-2</td>
+          <td>{{ "{:,}".format(form_3['data'][14][1]) }}</td>
+          <td>{{ "{}{:,}".format('+' if form_3['data'][14][2]>0 else '',form_3['data'][14][2]) }}</td>
         </tr>
         <tr style="background-color: yellow; font-weight: 600; font-size: 1.25em;">
           <td>Tổng tử vong</td>
-          <td>30</td>
-          <td>-2</td>
+          <td>{{ "{:,}".format(form_3['data'][15][1]) }}</td>
+          <td style="color: {{'red' if form_3['data'][15][2]>0 else 'green'}};">{{ "{}{:,}".format('+' if form_3['data'][15][2]>0 else '',form_3['data'][15][2]) }}</td>
         </tr>
       </table>
     </div>
@@ -346,7 +346,7 @@
 
   //HCMC HCMGIS map
   const hcmgis_map = new L.tileLayer('https://pcd.hcmgis.vn/geoserver/gwc/service/wmts?service=wmts&request=GetTile&version=1.0.0&layer=hcm_map:hcm_map_all&tilematrixset=EPSG:900913&tilematrix=EPSG:900913:{z}&tilerow={y}&tilecol={x}&format=image%2Fpng', {
-      attribution: "<a href='https://hcmgis.vn/' target='_blank'>HCMGIS</a>", opacity: 1, maxZoom: 20
+      attribution: "<a href='https://hcmgis.vn/' target='_blank'>HCMGIS</a>", opacity: 1, fillOpacity: 0, maxZoom: 20
   });
 
   //Việt Bản đồ
@@ -360,6 +360,9 @@
   const DGHC_THUDUC = new L.tileLayer('http://120.72.116.162/geoserver/gwc/service/wmts?service=wmts&request=GetTile&version=1.0.0&layer=tnmt:DGHC_TD&tilematrixset=EPSG:900913&tilematrix=EPSG:900913:{z}&tilerow={y}&tilecol={x}&format=image%2Fpng', {
       attribution: "<a href='https://donre.hochiminhcity.gov.vn/' target='_blank'>HCMC DONRE</a>", maxZoom: 20
   }); 
+  // var quanhuyen_base = new L.GeoJSON.AJAX("{{ url_for('static', filename='data/quanhuyen_2021.geojson') }}",{
+  //   style: {"color": "blue", "opacity": 1, "fillOpacity": 0, "interactive": false}})
+  var quanhuyen_base = hcmgis_map
 
   var map = new L.Map(
     document.getElementById('mapContainer'),
@@ -372,25 +375,28 @@
   
   var prevLayerClicked = null;
   var mystyle = function(level){ 
-    color = level == 1  ? { default: '#27ae60', click: '#2ecc71'}:
-            level == 2  ? { default: '#f39c12', click: '#feca57'}:
-            level == 3  ? { default: '#e74c3c', click: '#ff6b6b'}:
+    color = level == 1  ? { default: 'green', click: 'green'}:
+            level == 2  ? { default: 'yellow', click: 'yellow'}:
+            level == 3  ? { default: 'orange', click: 'orange'}:
+            level == 4  ? { default: 'red', click: '#ff6b6b'}:
                           '#7f8c8d';
     return {
       default: {
         "color": color.default,
-        "opacity": .3,
+        "opacity": 0,
         "fillOpacity": .35
       },
       click: {
         "color": color.click,
         "weight": 5,
-        "opacity": .3,
+        "opacity": .35,
         "fillOpacity": .5
       }}
   }
 
   levels = {{ levels|tojson }}
+  total = {{ total|tojson }}
+  id_2r = {{ id_2r|tojson }}
  
   var quanhuyen = new L.GeoJSON.AJAX("{{ url_for('static', filename='data/quanhuyen_2021.geojson') }}",{
                       style: function(district) {
@@ -409,7 +415,15 @@
                                   text += '<div> Cấp độ dịch: '+level+'</div>'
                                   text += '<div> Diện tích: '+parseInt(district.properties["dienTich"]).toLocaleString()+' ha</div>'
                                   text += '<div> Dân số: '+district.properties["danSoThuTe"].toLocaleString()+' người</div>'
+                                  text += '<div> Ca nhiễm mới trong ngày {{ today[:-6] }}: ' + total[id_2r[id_2]]['V']['real'].slice(-1)[0] + '</div>'
                                   layer.bindPopup(text).openPopup();
+                                  layer.setStyle(mystyle(level).click);
+                                },
+                                mouseout: function(e){
+                                  id_2 = district.properties["maDVHC"]
+                                  level = levels[id_2]
+                                  layer.setStyle(mystyle(level).default);
+                                  layer.closePopup()
                                 },
 
                                 click: function(e){
@@ -439,13 +453,16 @@
                       style: function(phuong) {
                                 id_3 = phuong.properties["maDVHCXa"]
                                 level = levels[id_3]
-                                return  mystyle(level).default
+                                temp =  mystyle(level).default
+                                temp.opacity = 0.2
+                                return temp
                               },
                               onEachFeature: function (phuong, layer) {
                                     layer.on({
                                       mouseover: function(e){
                                         id_3 = phuong.properties["maDVHCXa"]
                                         id_2 = phuong.properties["maDVHCHuye"]
+                                        level = levels[id_3]
                                         name_3 = phuong.properties["diaDanhXa"]
                                         name_2 = phuong.properties["diaDanhHuy"]
 
@@ -455,6 +472,13 @@
                                         text += '<div> Diện tích: '+parseInt(phuong.properties["dienTich"])+' ha</div>'
                                         text += '<div> Dân số: '+phuong.properties["danSoThucT"].toLocaleString()+' người</div>'
                                         layer.bindPopup(text).openPopup();
+                                        layer.setStyle(mystyle(level).click);
+                                      },
+                                      mouseout: function(e){
+                                        id_3 = phuong.properties["maDVHCXa"]
+                                        level = levels[id_3]
+                                        layer.setStyle(mystyle(level).default);
+                                        layer.closePopup()
                                       },
 
                                       click: function(e){
@@ -474,13 +498,14 @@
                                         // info.update(layer.feature.properties.availability);
                                         prevLayerClicked = layer;
                                         prevLevel = level;
-
                                       }
                                     });
                                 }
                     });
  
+  
   quanhuyen.addTo(map)
+  // quanhuyen_base.addTo(map)
   map.on('zoomend', function() {
           var zoomlevel = map.getZoom();
               if (zoomlevel < 11){
@@ -499,6 +524,7 @@
                       map.addLayer(phuongxa)
                   }
               }
+              // quanhuyen_base.bringToFront()
           });
 </script>
 
@@ -546,29 +572,37 @@
   {
     my_chart_c.destroy();
     if (_district == 'hcm'){
-      if (_prev_district != 'hcm'){
-        $(".carousel-indicators").append('<li class="only-hcm" data-target="#carousel-example-generic-captions" data-slide-to="3"></li>')
-        $(".carousel-inner").append('<div class="carousel-item forcast-charts only-hcm"><h5 style="color:#19191a">DỰ BÁO SỐ BỆNH NHÂN Ở TẦNG 3</h5><canvas id="chart_c"></canvas></div>')
-      }
-      
       scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");
       $.getJSON('/__load_data?district='+_district+'&&state=C&&scenario='+scenario, function(data) {
         my_chart_c = draw_chart('chart_c', data,days)
       });
-    }
-    else {
-      $('.carousel-indicators .active').removeClass('active')
-      $('.carousel-indicators li:first-child').addClass('active')
-      $('.carousel-inner .active').removeClass('active')
-      $('.carousel-inner div:first-child').addClass('active')
-      $('.only-hcm').remove()
     }
   }
   function load_district(x){
       _prev_district = _district
       _district = x.toLowerCase().replace(' ','_');
       $("#district").text(x);
+      if (_district == 'hcm'){
+        if (_prev_district != 'hcm'){
+          $(".carousel-indicators").append('<li class="only-hcm" data-target="#carousel-example-generic-captions" data-slide-to="3"></li>')
+          $(".carousel-inner").append('<div class="carousel-item forcast-charts only-hcm"><h5 style="color:#19191a">DỰ BÁO SỐ BỆNH NHÂN Ở TẦNG 3</h5><canvas id="chart_c"></canvas></div>')
+        }
+      }
+      else{
+        $('.carousel-indicators .active').removeClass('active')
+        $('.carousel-indicators li:first-child').addClass('active')
+        $('.carousel-inner .active').removeClass('active')
+        $('.carousel-inner div:first-child').addClass('active')
+        $('.only-hcm').remove()
+      }
       load_chart();
+      centre = {{ centre|tojson }}
+      if (x=='HCM'){
+        map.flyTo({ lat: 10.762622, lng: 106.660172 },10)
+      }
+      else{
+        map.flyTo(centre[x],12)
+      }
   }
 
   scenario = ($("#scenario").attr("value") == undefined) ? "best" : $("#scenario").attr("value");

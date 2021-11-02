@@ -129,7 +129,8 @@ def get_daily_latest_statistics():
 if __name__ == '__main__':
     os.system("mkdir -p backup")
     try:
-        summary = get_daily_latest_statistics()
+        # print(get_daily_latest_statistics())
+        # summary = get_daily_latest_statistics()
 
         backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
         backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
