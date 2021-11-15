@@ -433,12 +433,13 @@
   form_2 = {{ form_2|tojson }}
   form_4 = {{ form_4|tojson }}
   id_2r = {{ id_2r|tojson }}
+  id_1_to_code = {{ id_1_to_code|tojson }}
   centre = {{ centre|tojson }}
 
   var tinh = new L.GeoJSON.AJAX("{{ url_for('static', filename='data/vnm1.geojson') }}",{
                       style: function(tinh) {
                           id_1 = tinh.properties["ID_1"]
-                          level = levels[id_1]
+                          level = levels[id_1_to_code[id_1]+"00000000"]
                           temp = mystyle(level).default
                           temp.fillColor = temp.color
                           temp.color = "blue"
@@ -451,7 +452,7 @@
                                 mouseover: function(e){
                                   //hover: show popup, highlight area (increase opacity, fillOpacity)
                                   id_1 = district.properties["ID_1"]
-                                  level = levels[id_1]
+                                  level = levels[id_1_to_code[id_1]+"00000000"]
                                   name_1= district.properties["NAME_1"]
 
                                   text = '<div style="font-weight: bold">'+name_1
@@ -474,7 +475,7 @@
                                 mouseout: function(e){
                                   //end hover: close popup
                                   id_1 = district.properties["ID_1"]
-                                  level = levels[id_1]
+                                  level = levels[id_1_to_code[id_1]+"00000000"]
                                   temp = mystyle(level).default
                                   temp.fillColor = temp.color
                                   temp.color = "blue"

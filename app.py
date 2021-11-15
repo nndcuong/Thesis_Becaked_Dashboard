@@ -129,6 +129,7 @@ def reload():
         token = request.json['token']
         if check(token):
             os.system('python3 database.py')
+            crawl_byt(to_dir=os.path.join(app.root_path, 'static'))
             return "done"
         else:
             return "invalid token"
@@ -234,13 +235,16 @@ def home():
     with open(os.path.join(backup_data_dir,'form-4.json')) as f:
         form_4 = json.load(f)
 
-    df = pd.read_csv(os.path.join(backup_data_dir,'level_3.csv'),encoding='utf-8').dropna(axis=1)
-    level_3 = dict(zip(df['ID_3'],df['level']))
-    df = pd.read_csv(os.path.join(backup_data_dir,'level_2.csv'),encoding='utf-8').dropna(axis=1)
-    level_2 = dict(zip(df['ID_2'],df['level']))
+    # df = pd.read_csv(os.path.join(backup_data_dir,'level_3.csv'),encoding='utf-8').dropna(axis=1)
+    # level_3 = dict(zip(df['ID_3'],df['level']))
+    # df = pd.read_csv(os.path.join(backup_data_dir,'level_2.csv'),encoding='utf-8').dropna(axis=1)
+    # level_2 = dict(zip(df['ID_2'],df['level']))
     df = pd.read_csv(os.path.join(backup_data_dir,'level_1.csv'),encoding='utf-8').dropna(axis=1)
-    level_1 = dict(zip(df['ID_1'],df['level']))
-    levels = {**level_1,**level_2,**level_3}
+    # level_1 = dict(zip(df['ID_1'],df['level']))
+    # levels = {**level_1,**level_2,**level_3}
+    id_1_to_code = dict(zip(df['ID_1'],df['Code']))
+    with open(os.path.join(backup_data_dir,'byt/levels.json')) as f:
+        levels = json.load(f)
 
     return render_template('hcm.html',
                             name = 'HCM',
@@ -258,6 +262,7 @@ def home():
                             form_2 = form_2,
                             form_3 = form_3,
                             form_4 = form_4,
+                            id_1_to_code = id_1_to_code,
                             id_2r=id_2r
                             )
 
