@@ -29,13 +29,13 @@ def login_required(fn):
     @wraps(fn)
     def decorator(*args, **kwargs):
         if 'is-logged-in' not in session or session['is-logged-in'] is False:
-            return redirect('/login')
+            return redirect(url_for('login'))
         auth_token = session['auth-token']
         flag, msg = decode_auth_token(app.secret_key, auth_token)
         if flag:
             return fn(msg, *args, **kwargs)
         else:
-            return redirect('/login')
+            return redirect(url_for('login'))
     return decorator
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -47,13 +47,13 @@ def login():
         if flag:
             session['is-logged-in'] = True
             session['auth-token'] = encode_auth_token(app.secret_key, username)
-            return redirect(url_for('insert_data'))
+            return render_template('insert_data.html')
         else:
             return render_template('login.html', message = message)
     elif request.method == 'GET':
         if 'is-logged-in' not in session or session['is-logged-in'] is False:
             return render_template('login.html', message = None)
-        return redirect('/insert-data')
+        return render_template('insert_data.html')
 
 @app.route('/insert-data')
 @login_required
@@ -64,7 +64,7 @@ def insert_data(username):
 def upload_form_1():
     if request.method == 'POST':
         f = request.files['file']
-        df = pd.read_excel(f.read(), header = None)
+        df = pd.read_excel(f.read(), header = None).dropna(how='any',thresh=5,axis=1)
         try:
             data = process_form_1(df)
             backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
@@ -95,7 +95,7 @@ def upload_form_2():
 def upload_form_3():
     if request.method == 'POST':
         f = request.files['file']
-        df = pd.read_excel(f.read(), header = None)
+        df = pd.read_excel(f.read(), header = None).dropna(how='any',thresh=5,axis=1)
         try:
             data = process_form_3(df)
             backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
@@ -129,7 +129,8 @@ def reload():
         token = request.json['token']
         if check(token):
             os.system('python3 database.py')
-            crawl_byt(to_dir=os.path.join(app.root_path, 'static'))
+            backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
+            crawl_byt(to_dir=os.path.join(backup_data_dir,'byt'))
             return "done"
         else:
             return "invalid token"
@@ -235,10 +236,16 @@ def home():
     with open(os.path.join(backup_data_dir,'form-4.json')) as f:
         form_4 = json.load(f)
 
-    # df = pd.read_csv(os.path.join(backup_data_dir,'level_3.csv'),encoding='utf-8').dropna(axis=1)
-    # level_3 = dict(zip(df['ID_3'],df['level']))
-    # df = pd.read_csv(os.path.join(backup_data_dir,'level_2.csv'),encoding='utf-8').dropna(axis=1)
-    # level_2 = dict(zip(df['ID_2'],df['level']))
+    df = pd.read_csv(os.path.join(backup_data_dir,'level_3.csv'),encoding='utf-8')#.dropna(axis=1)
+    id_2,id_3 = df['ID_2'],df['ID_3']
+    id = ['79'+str(x).zfill(3)+str(y).zfill(5) for x,y in zip(id_2,id_3)]
+    level_3 = dict(zip(id,zip(df['level'],[df['date'][0]]*len(df))))
+
+    df = pd.read_csv(os.path.join(backup_data_dir,'level_2.csv'),encoding='utf-8')#.dropna(axis=1)
+    id_2 = df['ID_2']
+    id = ['79'+str(x).zfill(3)+'00000' for x in id_2]
+    level_2 = dict(zip(id,zip(df['level'],[df['date'][0]]*len(df))))
+
     df = pd.read_csv(os.path.join(backup_data_dir,'level_1.csv'),encoding='utf-8').dropna(axis=1)
     # level_1 = dict(zip(df['ID_1'],df['level']))
     # levels = {**level_1,**level_2,**level_3}
@@ -246,6 +253,9 @@ def home():
     with open(os.path.join(backup_data_dir,'byt/levels.json')) as f:
         levels = json.load(f)
 
+    # levels = {**levels,**level_2,**level_3}
+    levels.update(level_2)
+    levels.update(level_3)
     return render_template('hcm.html',
                             name = 'HCM',
                             today = today,

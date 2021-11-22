@@ -17,41 +17,6 @@ import json
 import base64
 import glob
 
-def update_data():
-    os.system("cd COVID-19 && git pull origin master")
-
-def crawl_byt_by_id(id):
-    id = str(id).zfill(2)
-    url = 'https://forms.datagalaxy.dev/covid/export-excel/'
-    payload = {"id":id,"date":datetime.now().replace(microsecond=0).strftime("%d/%m/%Y %H:%M:%S")}
-    headers = {'Content-type': 'application/json;charset=UTF-8'}
-    response = requests.post(url, json = payload, headers = headers)
-    enc = json.loads(response.text)["result"]["data"]
-    dec = base64.b64decode(enc)
-    return dec
-
-def crawl_byt(to_dir):
-    ids = ['48', '75', '87', '67', '66', '11', '89', '77', '52', '74', '70', '60', '95', '24', '6', '27', '83', '96', '4', '92', '64', '2', '1', '35', '42', '79', '17', '33', '30', '31', '93', '56', '91', '62', '10', '67', '12', '20', '80', '36', '40', '37', '58', '25', '54', '44', '49', '51', '22', '45', '94', '14', '72', '34', '19', '46', '38', '82', '84', '8', '86', '26', '15']
-    for id in ids:
-        with open(os.path.join(to_dir,id+'.xlsx'),'wb') as f:
-            f.write(crawl_byt_by_id(id))
-    process_byt_all(to_dir)
-
-def process_byt_one(filepath):
-    df = pd.read_excel(filepath,usecols=[2,4],skiprows=8)
-    k = df.iloc[:,0].tolist()
-    v = df.iloc[:,1].tolist()
-    v = [int(x[-1]) for x in v]
-    return {x:y for x,y in zip(k,v)}
-
-def process_byt_all(dirpath):
-    result = {}
-    for filepath in glob.glob(os.path.join(dirpath,'*.xlsx')):
-        new = process_byt_one(filepath)
-        result = {**result,**new}
-    with open(os.path.join(dirpath,'levels.json'),'w') as f:
-        json.dump(result,f)
-
 def get_daily_data(data):
     """
         data: {"I":{"NormalCase":[...],

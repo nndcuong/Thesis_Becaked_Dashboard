@@ -23,8 +23,8 @@ def query_data(db, district, date):
 def encode_auth_token(secret_key, username):
     try:
         payload = {
-            'exp': dt.utcnow() + timedelta(days = 0, hours = 1),
-            'iat': dt.utcnow(),
+            'exp': (dt.utcnow() + timedelta(days = 0, hours = 1)).strftime('%b %d, %Y %H:%M'),
+            'iat': dt.utcnow().strftime('%b %d, %Y %H:%M'),
             'sub': username
         }
         return jwt.encode(
@@ -33,6 +33,7 @@ def encode_auth_token(secret_key, username):
             algorithm = 'HS256'
         )
     except Exception as e:
+        print(payload,secret_key)
         return e
 def decode_auth_token(secret_key, auth_token):
     try:
@@ -129,8 +130,7 @@ def get_daily_latest_statistics():
 if __name__ == '__main__':
     os.system("mkdir -p backup")
     try:
-        print(get_daily_latest_statistics())
-        summary = get_daily_latest_statistics()
+        # summary = get_daily_latest_statistics()
 
         backup_data_dir = os.environ.get("BACKUP_DATA_PATH", "./backup/")
         backup_summary_path = os.environ.get("BACKUP_SUMMARY_PATH", "./backup/backup_summary.json")
@@ -141,8 +141,8 @@ if __name__ == '__main__':
             path = os.path.join(backup_data_dir,district+'.json')
             with open(path,'w') as json_file:
                 json.dump(data,json_file)
-        with open(backup_summary_path,'w') as json_file:
-            json.dump(summary,json_file)
+        # with open(backup_summary_path,'w') as json_file:
+        #     json.dump(summary,json_file)
     except Exception as e:
         print(e)
         pass
